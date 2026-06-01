@@ -2,25 +2,100 @@
 
 :root {
   --background: #ffffff;
+  --background-secondary: #f8f5f2;
+  --beige-soft: #e9e1da;
+  --gold: #b99672;
+  --gold-accent: #cbae91;
   --foreground: #171717;
+  --muted: #757575;
+  --border: #ececec;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-beige-soft: var(--beige-soft);
+  --color-gold: var(--gold);
+  --color-gold-accent: var(--gold-accent);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gold) 25%, transparent);
+}
+
+.luxury-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .luxury-container {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .luxury-container {
+    padding-inline: 4rem;
+  }
+}
+
+.section-padding {
+  padding-block: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-block: 7rem;
+  }
+}
+
+.gold-line {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.text-balance {
+  text-wrap: balance;
 }

@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "booking": "Book Appointment",
+    "contact": "Contact"
+  },
+  "common": {
+    "bookNow": "Book Now",
+    "viewPortfolio": "View Portfolio",
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "from": "from",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "priceRange": "Price Range",
+    "send": "Send",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "readMore": "Read More"
+  },
+  "home": {
+    "heroTitle": "Sepideh Mihanparast",
+    "heroSubtitleLine1": "Professional Hair Stylist",
+    "heroSubtitleLine2": "& Makeup Artist",
+    "heroDescriptionLine1": "Elegant, timeless beauty looks —",
+    "heroDescriptionLine2": "individually crafted in Hamburg.",
+    "aboutPreviewTitle": "About Me",
+    "servicesTitle": "Services",
+    "portfolioTitle": "Portfolio",
+    "bridalTitle": "Bridal Styling",
+    "cannesTitle": "Cannes Red Carpet",
+    "editorialTitle": "Editorial Styling",
+    "testimonialsTitle": "Testimonials",
+    "instagramTitle": "Instagram",
+    "faqTitle": "FAQ",
+    "ctaTitle": "Ready for Your Look?",
+    "ctaDescription": "Book your appointment for bridal styling, events, or editorial productions."
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "My Journey",
+    "timelineTitle": "Experience",
+    "certificationsTitle": "Certifications",
+    "highlightsTitle": "Highlights",
+    "collaborationsTitle": "Collaborations"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Premium Beauty Services in Hamburg",
+    "faqTitle": "Frequently Asked Questions",
+    "ctaHint": "Ready to book your appointment?",
+    "detailCtaHint": "Personal consultation — tailored to your occasion.",
+    "galleryTitle": "From the Portfolio"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "2025 Collection",
+    "searchPlaceholder": "Search portfolio...",
+    "noResults": "No results found"
+  },
+  "booking": {
+    "title": "Book Appointment",
+    "subtitle": "Choose your service and preferred date",
+    "stepService": "Service",
+    "stepDate": "Date",
+    "stepTime": "Time",
+    "stepDetails": "Details",
+    "stepConfirm": "Confirm",
+    "selectService": "Select Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "yourDetails": "Your Details",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "notes": "Notes (optional)",
+    "summary": "Summary",
+    "confirmBooking": "Submit Booking",
+    "pendingTitle": "Request Received",
+    "pendingDescription": "Thank you! We've received your request. You'll get an email with the details shortly. Once we confirm your appointment, you'll receive a second email with your confirmed time.",
+    "pendingDescriptionNoEmail": "Thank you! We've received your booking request. We could not send a confirmation email right now, but your appointment request was saved.",
+    "emailNotConfigured": "Email is not configured on the server (missing RESEND_API_KEY).",
+    "emailSendFailed": "The confirmation email could not be sent. Please contact us directly if you don't hear back within 48 hours.",
+    "noSlots": "No available slots on this day",
+    "loadingDates": "Checking available dates…",
+    "dateAvailable": "Available",
+    "dateUnavailable": "Unavailable",
+    "pickAvailableDate": "Please select an available date"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "I look forward to hearing from you",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "instagram": "Instagram"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Beauty, Bridal & Editorial Insights"
+  },
+  "legal": {
+    "impressum": "Legal Notice",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "cookies": "Cookie Policy",
+    "withdrawal": "Right of Withdrawal"
+  },
+  "footer": {
+    "tagline": "Luxury Hair & Makeup — Hamburg",
+    "rights": "All rights reserved",
+    "legal": "Legal"
+  },
+  "cookie": {
+    "title": "Cookie Settings",
+    "description": "We use cookies for analytics and to improve your experience.",
+    "accept": "Accept All",
+    "decline": "Essential Only",
+    "settings": "Settings"
+  }
+}

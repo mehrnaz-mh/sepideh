@@ -1,0 +1,409 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum TestimonialType {
+  TEXT
+  PHOTO
+  VIDEO
+}
+
+enum BlogPostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  name          String
+  role          Role      @default(ADMIN)
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  appointments Appointment[] @relation("AssignedTo")
+  auditLogs    AuditLog[]
+  blogPosts    BlogPost[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?
+  firstName String
+  lastName  String
+  notes     String?  @db.Text
+  tags      String[] @default([])
+  isVip     Boolean  @default(false)
+  locale    String   @default("de")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@index([lastName, firstName])
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  durationMinutes Int
+  bufferMinutes   Int      @default(15)
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  translations   ServiceTranslation[]
+  appointments   Appointment[]
+  portfolioItems PortfolioItem[]
+  faqs           ServiceFaq[]
+  mediaFiles     MediaFile[] @relation("ServiceGallery")
+}
+
+model ServiceTranslation {
+  id          String  @id @default(cuid())
+  serviceId   String
+  locale      String
+  title       String
+  description String  @db.Text
+  shortDesc   String?
+  metaTitle   String?
+  metaDesc    String?
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, locale])
+}
+
+model ServiceFaq {
+  id        String @id @default(cuid())
+  serviceId String
+  locale    String
+  question  String
+  answer    String @db.Text
+  sortOrder Int    @default(0)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  clientId      String
+  serviceId     String
+  assignedToId  String?
+  startTime     DateTime
+  endTime       DateTime
+  status        AppointmentStatus @default(PENDING)
+  notes         String?           @db.Text
+  internalNotes String?           @db.Text
+  googleEventId String?
+  icsSent       Boolean           @default(false)
+  reminderSent  Boolean           @default(false)
+  locale        String            @default("de")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  client     Client  @relation(fields: [clientId], references: [id])
+  service    Service @relation(fields: [serviceId], references: [id])
+  assignedTo User?   @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  @@index([startTime, status])
+  @@index([clientId])
+}
+
+model PortfolioCategory {
+  id        String @id @default(cuid())
+  slug      String @unique
+  sortOrder Int    @default(0)
+
+  translations PortfolioCategoryTranslation[]
+  items        PortfolioItem[]
+}
+
+model PortfolioCategoryTranslation {
+  id         String @id @default(cuid())
+  categoryId String
+  locale     String
+  name       String
+
+  category PortfolioCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+}
+
+model PortfolioItem {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  categoryId  String
+  serviceId   String?
+  featured    Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  category     PortfolioCategory          @relation(fields: [categoryId], references: [id])
+  service      Service?                   @relation(fields: [serviceId], references: [id])
+  translations PortfolioItemTranslation[]
+  mediaFiles   MediaFile[]                @relation("PortfolioMedia")
+
+  @@index([categoryId, featured])
+}
+
+model PortfolioItemTranslation {
+  id          String  @id @default(cuid())
+  itemId      String
+  locale      String
+  title       String
+  description String? @db.Text
+  altText     String?
+
+  item PortfolioItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, locale])
+}
+
+model Testimonial {
+  id          String          @id @default(cuid())
+  type        TestimonialType @default(TEXT)
+  rating      Int?
+  featured    Boolean         @default(false)
+  sortOrder   Int             @default(0)
+  clientName  String
+  eventType   String?
+  publishedAt DateTime?
+  createdAt   DateTime        @default(now())
+  mediaFileId String?
+  mediaFile   MediaFile?      @relation("TestimonialMedia", fields: [mediaFileId], references: [id])
+
+  translations TestimonialTranslation[]
+}
+
+model TestimonialTranslation {
+  id            String @id @default(cuid())
+  testimonialId String
+  locale        String
+  content       String @db.Text
+
+  testimonial Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+
+  @@unique([testimonialId, locale])
+}
+
+model BlogCategory {
+  id        String @id @default(cuid())
+  slug      String @unique
+  sortOrder Int    @default(0)
+
+  translations BlogCategoryTranslation[]
+  posts        BlogPost[]
+}
+
+model BlogCategoryTranslation {
+  id         String @id @default(cuid())
+  categoryId String
+  locale     String
+  name       String
+
+  category BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+}
+
+model BlogPost {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  categoryId      String?
+  authorId        String
+  status          BlogPostStatus @default(DRAFT)
+  featured        Boolean        @default(false)
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  featuredImageId String?
+
+  category      BlogCategory?         @relation(fields: [categoryId], references: [id])
+  author        User                  @relation(fields: [authorId], references: [id])
+  featuredImage MediaFile?            @relation("BlogFeatured", fields: [featuredImageId], references: [id])
+  translations  BlogPostTranslation[]
+  tags          BlogPostTag[]
+}
+
+model BlogPostTranslation {
+  id        String  @id @default(cuid())
+  postId    String
+  locale    String
+  title     String
+  excerpt   String?
+  content   String  @db.Text
+  metaTitle String?
+  metaDesc  String?
+  ogImage   String?
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, locale])
+}
+
+model BlogPostTag {
+  id     String @id @default(cuid())
+  postId String
+  tag    String
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tag])
+}
+
+model MediaFile {
+  id           String   @id @default(cuid())
+  cloudinaryId String?  @unique
+  url          String
+  secureUrl    String
+  publicId     String?
+  format       String?
+  width        Int?
+  height       Int?
+  bytes        Int?
+  altText      String?
+  folder       String?
+  createdAt    DateTime @default(now())
+
+  portfolioItems PortfolioItem[] @relation("PortfolioMedia")
+  services       Service[]       @relation("ServiceGallery")
+  testimonials   Testimonial[]   @relation("TestimonialMedia")
+  blogPosts      BlogPost[]      @relation("BlogFeatured")
+}
+
+model AvailabilityRule {
+  id        String    @id @default(cuid())
+  dayOfWeek DayOfWeek
+  startTime String
+  endTime   String
+  isActive  Boolean   @default(true)
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  reason    String?
+  allDay    Boolean  @default(true)
+  startTime String?
+  endTime   String?
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+}
+
+model Translation {
+  id        String @id @default(cuid())
+  namespace String
+  locale    String
+  key       String
+  value     String @db.Text
+
+  @@unique([namespace, locale, key])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+model PageContent {
+  id      String @id @default(cuid())
+  pageKey String
+  locale  String
+  section String
+  content Json
+
+  @@unique([pageKey, locale, section])
+}

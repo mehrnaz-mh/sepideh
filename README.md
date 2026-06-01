@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sepideh Mihanparast — Luxury Beauty Platform
+
+A full-stack Next.js application for professional hair styling and makeup artistry in Hamburg, Germany.
+
+## Features
+
+- **Marketing Website** — Luxury editorial design (DE/EN)
+- **Portfolio Gallery** — Filter, search, lightbox, infinite scroll
+- **Booking System** — Service selection, availability, email confirmations, ICS invites
+- **Admin Dashboard** — Appointments, CRM, services, portfolio, blog, settings
+- **SEO** — Metadata, structured data, sitemap, hreflang
+- **Legal Pages** — Impressum, Datenschutz, AGB, Cookies, Widerruf (template — review with lawyer)
+
+## Tech Stack
+
+Next.js 16 · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Auth.js · next-intl · Framer Motion · Resend · Cloudinary · Google Calendar
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Set `DATABASE_URL` to your PostgreSQL connection string (Neon, Supabase, or local).
+
+### 3. Set up database
+
+```bash
+npm run db:push
+npm run db:seed
+```
+
+### 4. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Website:** http://localhost:3000/de
+- **Admin:** http://localhost:3000/admin/login
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Default admin credentials (from seed):
+- Email: `admin@sepidehmihanparast.de`
+- Password: `Sepide2025!` (or value of `ADMIN_PASSWORD` in `.env`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment (Vercel)
 
-## Learn More
+1. Push to GitHub and import in Vercel
+2. Add environment variables from `.env.example`
+3. Connect Neon PostgreSQL and set `DATABASE_URL`
+4. Run `npm run db:push && npm run db:seed` against production DB
+5. Configure custom domain and `NEXT_PUBLIC_SITE_URL`
 
-To learn more about Next.js, take a look at the following resources:
+### Cron (Reminder Emails)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Add Vercel Cron to hit `/api/cron/reminders` daily with `Authorization: Bearer CRON_SECRET`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Portfolio Content
 
-## Deploy on Vercel
+Images extracted from `Portfolio.pdf` are in `/public/portfolio/`. Seed data maps portfolio items, services, testimonials, and bio from the PDF.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Legal Notice
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+German legal page templates are placeholders. Have Impressum, Datenschutzerklärung, and AGB reviewed by a qualified lawyer before launch.

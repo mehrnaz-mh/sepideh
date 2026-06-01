@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über mich",
+    "services": "Leistungen",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "booking": "Termin buchen",
+    "contact": "Kontakt"
+  },
+  "common": {
+    "bookNow": "Termin buchen",
+    "viewPortfolio": "Portfolio ansehen",
+    "learnMore": "Mehr erfahren",
+    "viewAll": "Alle ansehen",
+    "from": "ab",
+    "duration": "Dauer",
+    "minutes": "Minuten",
+    "priceRange": "Preisbereich",
+    "send": "Senden",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolgreich",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden",
+    "close": "Schließen",
+    "search": "Suchen",
+    "filter": "Filter",
+    "all": "Alle",
+    "readMore": "Weiterlesen"
+  },
+  "home": {
+    "heroTitle": "Sepideh Mihanparast",
+    "heroSubtitleLine1": "Professionelle Hairstylistin",
+    "heroSubtitleLine2": "& Make-up-Artistin",
+    "heroDescriptionLine1": "Elegante, zeitlose Beauty-Looks —",
+    "heroDescriptionLine2": "individuell gestaltet in Hamburg.",
+    "aboutPreviewTitle": "Über mich",
+    "servicesTitle": "Leistungen",
+    "portfolioTitle": "Portfolio",
+    "bridalTitle": "Bridal Styling",
+    "cannesTitle": "Cannes Red Carpet",
+    "editorialTitle": "Editorial Styling",
+    "testimonialsTitle": "Kundenstimmen",
+    "instagramTitle": "Instagram",
+    "faqTitle": "Häufige Fragen",
+    "ctaTitle": "Bereit für Ihren Look?",
+    "ctaDescription": "Buchen Sie Ihren Termin für Brautstyling, Events oder Editorial-Produktionen."
+  },
+  "about": {
+    "title": "Über mich",
+    "subtitle": "Meine Reise",
+    "timelineTitle": "Erfahrung",
+    "certificationsTitle": "Zertifizierungen",
+    "highlightsTitle": "Highlights",
+    "collaborationsTitle": "Kooperationen"
+  },
+  "services": {
+    "title": "Leistungen",
+    "subtitle": "Premium Beauty Services in Hamburg",
+    "faqTitle": "Häufige Fragen",
+    "ctaHint": "Bereit für Ihren Termin?",
+    "detailCtaHint": "Persönliche Beratung — abgestimmt auf Ihren Anlass.",
+    "galleryTitle": "Aus dem Portfolio"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "2025 Collection",
+    "searchPlaceholder": "Portfolio durchsuchen...",
+    "noResults": "Keine Ergebnisse gefunden"
+  },
+  "booking": {
+    "title": "Termin buchen",
+    "subtitle": "Wählen Sie Ihre Leistung und Ihren Wunschtermin",
+    "stepService": "Leistung",
+    "stepDate": "Datum",
+    "stepTime": "Uhrzeit",
+    "stepDetails": "Details",
+    "stepConfirm": "Bestätigung",
+    "selectService": "Leistung wählen",
+    "selectDate": "Datum wählen",
+    "selectTime": "Uhrzeit wählen",
+    "yourDetails": "Ihre Angaben",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "notes": "Anmerkungen (optional)",
+    "summary": "Zusammenfassung",
+    "confirmBooking": "Buchung absenden",
+    "pendingTitle": "Anfrage eingegangen",
+    "pendingDescription": "Vielen Dank! Wir haben Ihre Anfrage erhalten. Sie erhalten in Kürze eine E-Mail mit den Details. Sobald wir Ihren Termin bestätigen, senden wir Ihnen eine zweite E-Mail mit der bestätigten Uhrzeit.",
+    "pendingDescriptionNoEmail": "Vielen Dank! Wir haben Ihre Buchungsanfrage erhalten. Die Bestätigungs-E-Mail konnte gerade nicht gesendet werden, Ihre Anfrage wurde jedoch gespeichert.",
+    "emailNotConfigured": "E-Mail ist auf dem Server nicht konfiguriert (RESEND_API_KEY fehlt).",
+    "emailSendFailed": "Die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte kontaktieren Sie uns direkt, wenn Sie innerhalb von 48 Stunden nichts hören.",
+    "noSlots": "Keine verfügbaren Termine an diesem Tag",
+    "loadingDates": "Verfügbare Termine werden geladen…",
+    "dateAvailable": "Verfügbar",
+    "dateUnavailable": "Nicht verfügbar",
+    "pickAvailableDate": "Bitte wählen Sie ein verfügbares Datum"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Ich freue mich auf Ihre Nachricht",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "location": "Standort",
+    "instagram": "Instagram"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Beauty, Bridal & Editorial Insights"
+  },
+  "legal": {
+    "impressum": "Impressum",
+    "privacy": "Datenschutzerklärung",
+    "terms": "AGB",
+    "cookies": "Cookie-Richtlinie",
+    "withdrawal": "Widerrufsbelehrung"
+  },
+  "footer": {
+    "tagline": "Luxury Hair & Makeup — Hamburg",
+    "rights": "Alle Rechte vorbehalten",
+    "legal": "Rechtliches"
+  },
+  "cookie": {
+    "title": "Cookie-Einstellungen",
+    "description": "Wir verwenden Cookies für Analyse und zur Verbesserung Ihrer Erfahrung.",
+    "accept": "Alle akzeptieren",
+    "decline": "Nur notwendige",
+    "settings": "Einstellungen"
+  }
+}
