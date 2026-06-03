@@ -78,7 +78,7 @@ export async function updateClient(id: string, formData: FormData): Promise<Acti
   return actionSuccess();
 }
 
-export async function deleteClient(id: string): Promise<ActionResult> {
+export async function deleteClient(id: string): Promise<void> {
   const session = await requireAdmin();
   const appointmentCount = await prisma.appointment.count({ where: { clientId: id } });
 
@@ -95,7 +95,6 @@ export async function deleteClient(id: string): Promise<ActionResult> {
   revalidatePath("/admin/clients");
   revalidatePath("/admin/appointments");
   revalidatePath("/admin/calendar");
-  return actionSuccess();
 }
 
 export async function toggleClientVip(clientId: string, isVip: boolean): Promise<ActionResult> {
