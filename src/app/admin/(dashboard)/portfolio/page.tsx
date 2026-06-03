@@ -1,5 +1,6 @@
 import { siteImages } from "@/data/content";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { DeleteButton } from "@/components/admin/delete-button";
