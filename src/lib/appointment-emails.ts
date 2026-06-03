@@ -1,6 +1,11 @@
 import type { AppointmentStatus, Prisma } from "@prisma/client";
-import { services } from "@/data/content";
-import { generateIcsEvent } from "@/lib/ics";
+import { services, siteConfig } from "@/data/content";
+import { renderAdminBookingEmail, renderAppointmentEmail } from "@/lib/email-templates";
+import {
+  buildGoogleCalendarUrl,
+  buildIcsEmailAttachment,
+  generateIcsEvent,
+} from "@/lib/ics";
 import { sendEmail, type SendEmailResult } from "@/lib/resend";
 
 export type AppointmentWithDetails = Prisma.AppointmentGetPayload<{
@@ -51,115 +56,94 @@ function formatDateTime(date: Date, locale: string) {
   };
 }
 
-function emailLayout(body: string) {
-  return `
-    <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #171717;">
-      <h1 style="font-weight: 400; font-size: 24px;">Sepideh Mihanparast</h1>
-      ${body}
-    </div>
-  `;
+function appointmentDetails(appointment: AppointmentWithDetails) {
+  const isDe = appointment.locale === "de";
+  const service = serviceTitle(appointment);
+  const { date, time } = formatDateTime(appointment.startTime, appointment.locale);
+
+  return [
+    { label: isDe ? "Leistung" : "Service", value: service },
+    { label: isDe ? "Datum" : "Date", value: date },
+    { label: isDe ? "Uhrzeit" : "Time", value: time },
+    { label: isDe ? "Ort" : "Location", value: "Hamburg, Germany" },
+  ];
+}
+
+function calendarLinks(appointment: AppointmentWithDetails) {
+  const service = serviceTitle(appointment);
+  return buildGoogleCalendarUrl({
+    title: `${service} — ${siteConfig.name}`,
+    description: appointment.notes || service,
+    startTime: appointment.startTime,
+    endTime: appointment.endTime,
+  });
 }
 
 function bookingRequestHtml(appointment: AppointmentWithDetails) {
   const isDe = appointment.locale === "de";
   const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-  const service = serviceTitle(appointment);
-  const { date, time } = formatDateTime(appointment.startTime, appointment.locale);
 
-  return emailLayout(`
-    <p style="color: #757575;">${isDe ? "Liebe/r" : "Dear"} ${name},</p>
-    <p style="color: #757575;">
-      ${
-        isDe
-          ? "Vielen Dank für Ihre Buchungsanfrage."
-          : "Thank you for your booking request."
-      }
-    </p>
-    <div style="background: #F8F5F2; padding: 24px; margin: 24px 0;">
-      <p><strong>${isDe ? "Leistung" : "Service"}:</strong> ${service}</p>
-      <p><strong>${isDe ? "Datum" : "Date"}:</strong> ${date}</p>
-      <p><strong>${isDe ? "Uhrzeit" : "Time"}:</strong> ${time}</p>
-      <p><strong>Status:</strong> ${isDe ? "Ausstehend" : "Pending"}</p>
-    </div>
-    <p style="color: #757575;">
-      ${
-        isDe
-          ? "Ich bestätige Ihren Termin innerhalb von 24–48 Stunden."
-          : "I will confirm your appointment within 24–48 hours."
-      }
-    </p>
-  `);
+  return renderAppointmentEmail({
+    locale: appointment.locale,
+    clientName: name,
+    headline: isDe ? "Buchungsanfrage erhalten" : "Booking request received",
+    intro: isDe
+      ? "Vielen Dank für Ihre Buchungsanfrage. Ich freue mich darauf, Sie bald zu verwöhnen."
+      : "Thank you for your booking request. I look forward to welcoming you soon.",
+    outro: isDe
+      ? "Ich bestätige Ihren Termin in der Regel innerhalb von 24–48 Stunden. Sie erhalten eine weitere E-Mail, sobald alles bestätigt ist."
+      : "I will confirm your appointment within 24–48 hours. You will receive another email once everything is confirmed.",
+    details: [
+      ...appointmentDetails(appointment),
+      { label: "Status", value: isDe ? "Ausstehend" : "Pending" },
+    ],
+    statusLabel: isDe ? "Ausstehend" : "Pending",
+    statusTone: "pending",
+    showCalendarNote: true,
+    googleCalendarUrl: calendarLinks(appointment),
+  });
 }
 
 function bookingConfirmedHtml(appointment: AppointmentWithDetails) {
   const isDe = appointment.locale === "de";
   const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-  const service = serviceTitle(appointment);
-  const { date, time } = formatDateTime(appointment.startTime, appointment.locale);
 
-  return emailLayout(`
-    <p style="color: #757575;">${isDe ? "Liebe/r" : "Dear"} ${name},</p>
-    <p style="color: #757575;">
-      ${
-        isDe
-          ? "Ihr Termin wurde bestätigt."
-          : "Your appointment has been confirmed."
-      }
-    </p>
-    <div style="background: #F8F5F2; padding: 24px; margin: 24px 0;">
-      <p><strong>${isDe ? "Leistung" : "Service"}:</strong> ${service}</p>
-      <p><strong>${isDe ? "Datum" : "Date"}:</strong> ${date}</p>
-      <p><strong>${isDe ? "Uhrzeit" : "Time"}:</strong> ${time}</p>
-    </div>
-    <p style="color: #757575;">
-      ${isDe ? "Wir freuen uns auf Sie." : "We look forward to seeing you."}
-    </p>
-  `);
+  return renderAppointmentEmail({
+    locale: appointment.locale,
+    clientName: name,
+    headline: isDe ? "Ihr Termin ist bestätigt" : "Your appointment is confirmed",
+    intro: isDe
+      ? "Es ist mir eine Freude, Ihnen mitteilen zu können, dass Ihr Termin bestätigt wurde."
+      : "It is my pleasure to confirm that your appointment has been scheduled.",
+    outro: isDe
+      ? "Ich freue mich auf Sie und darauf, einen eleganten, individuellen Look für Sie zu kreieren."
+      : "I look forward to seeing you and creating an elegant, tailored look just for you.",
+    details: appointmentDetails(appointment),
+    statusLabel: isDe ? "Bestätigt" : "Confirmed",
+    statusTone: "confirmed",
+    showCalendarNote: true,
+    googleCalendarUrl: calendarLinks(appointment),
+  });
 }
 
 function bookingCancelledHtml(appointment: AppointmentWithDetails) {
   const isDe = appointment.locale === "de";
   const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-  const service = serviceTitle(appointment);
-  const { date, time } = formatDateTime(appointment.startTime, appointment.locale);
 
-  return emailLayout(`
-    <p style="color: #757575;">${isDe ? "Liebe/r" : "Dear"} ${name},</p>
-    <p style="color: #757575;">
-      ${
-        isDe
-          ? "Ihr Termin wurde storniert."
-          : "Your appointment has been cancelled."
-      }
-    </p>
-    <div style="background: #F8F5F2; padding: 24px; margin: 24px 0;">
-      <p><strong>${isDe ? "Leistung" : "Service"}:</strong> ${service}</p>
-      <p><strong>${isDe ? "Datum" : "Date"}:</strong> ${date}</p>
-      <p><strong>${isDe ? "Uhrzeit" : "Time"}:</strong> ${time}</p>
-    </div>
-    <p style="color: #757575;">
-      ${
-        isDe
-          ? "Bei Fragen können Sie uns jederzeit kontaktieren."
-          : "Please contact us if you have any questions."
-      }
-    </p>
-  `);
-}
-
-function adminNewBookingHtml(appointment: AppointmentWithDetails) {
-  const service = serviceTitle(appointment);
-  const client = appointment.client;
-
-  return `
-    <h2>New Booking Request</h2>
-    <p><strong>Client:</strong> ${client.firstName} ${client.lastName}</p>
-    <p><strong>Email:</strong> ${client.email}</p>
-    <p><strong>Phone:</strong> ${client.phone || "N/A"}</p>
-    <p><strong>Service:</strong> ${service}</p>
-    <p><strong>Start:</strong> ${appointment.startTime.toISOString()}</p>
-    <p><strong>Notes:</strong> ${appointment.notes || "—"}</p>
-  `;
+  return renderAppointmentEmail({
+    locale: appointment.locale,
+    clientName: name,
+    headline: isDe ? "Termin storniert" : "Appointment cancelled",
+    intro: isDe
+      ? "Ihr Termin wurde storniert. Bei Fragen oder einem neuen Wunschtermin stehe ich Ihnen gerne zur Verfügung."
+      : "Your appointment has been cancelled. If you have any questions or would like to rebook, please get in touch.",
+    outro: isDe
+      ? "Sie können jederzeit eine neue Buchungsanfrage über die Website stellen."
+      : "You are welcome to submit a new booking request at any time via the website.",
+    details: appointmentDetails(appointment),
+    statusLabel: isDe ? "Storniert" : "Cancelled",
+    statusTone: "cancelled",
+  });
 }
 
 export async function sendBookingRequestEmail(
@@ -167,15 +151,13 @@ export async function sendBookingRequestEmail(
 ): Promise<SendEmailResult> {
   const isDe = appointment.locale === "de";
   const service = serviceTitle(appointment);
-  const clientName = `${appointment.client.firstName} ${appointment.client.lastName}`;
 
   const ics = generateIcsEvent({
     title: service,
     description: appointment.notes || service,
     startTime: appointment.startTime,
     endTime: appointment.endTime,
-    attendeeEmail: appointment.client.email,
-    attendeeName: clientName,
+    uid: `booking-${appointment.id}@sepidehmihanparast.de`,
   });
 
   return sendEmail({
@@ -184,7 +166,7 @@ export async function sendBookingRequestEmail(
       ? "Ihre Buchungsanfrage — Sepideh Mihanparast"
       : "Your Booking Request — Sepideh Mihanparast",
     html: bookingRequestHtml(appointment),
-    attachments: [{ filename: "appointment.ics", content: ics }],
+    attachments: [buildIcsEmailAttachment(ics)],
   });
 }
 
@@ -192,11 +174,19 @@ export async function sendAdminNewBookingNotification(
   appointment: AppointmentWithDetails,
 ): Promise<SendEmailResult> {
   const client = appointment.client;
+  const service = serviceTitle(appointment);
 
   return sendEmail({
     to: adminEmail(),
     subject: `New Booking: ${client.firstName} ${client.lastName}`,
-    html: adminNewBookingHtml(appointment),
+    html: renderAdminBookingEmail({
+      clientName: `${client.firstName} ${client.lastName}`,
+      clientEmail: client.email,
+      clientPhone: client.phone ?? "",
+      service,
+      startIso: appointment.startTime.toISOString(),
+      notes: appointment.notes ?? "",
+    }),
   });
 }
 
@@ -209,14 +199,12 @@ export async function notifyAppointmentStatusChange(
 
   if (status === "CONFIRMED" && previousStatus !== "CONFIRMED") {
     const service = serviceTitle(appointment);
-    const clientName = `${appointment.client.firstName} ${appointment.client.lastName}`;
     const ics = generateIcsEvent({
       title: service,
       description: appointment.notes || service,
       startTime: appointment.startTime,
       endTime: appointment.endTime,
-      attendeeEmail: appointment.client.email,
-      attendeeName: clientName,
+      uid: `appointment-${appointment.id}@sepidehmihanparast.de`,
     });
 
     return sendEmail({
@@ -225,7 +213,7 @@ export async function notifyAppointmentStatusChange(
         ? "Termin bestätigt — Sepideh Mihanparast"
         : "Appointment Confirmed — Sepideh Mihanparast",
       html: bookingConfirmedHtml(appointment),
-      attachments: [{ filename: "appointment.ics", content: ics }],
+      attachments: [buildIcsEmailAttachment(ics)],
     });
   }
 
