@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/page-header";
+import { AppointmentStatusButtons } from "@/components/admin/appointment-status-buttons";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { Badge } from "@/components/ui/badge";
 import { getAppointments, deleteAppointment, updateAppointmentStatus } from "@/actions/appointments";
-import type { AppointmentStatus } from "@prisma/client";
-
 const statusVariant: Record<string, "default" | "success" | "warning" | "danger"> = {
   PENDING: "warning",
   CONFIRMED: "success",
@@ -74,26 +73,11 @@ export default async function AdminAppointmentsPage() {
                         confirmMessage="Delete this appointment?"
                       />
                     </div>
-                    <div className="mt-2 flex flex-wrap justify-end gap-1">
-                      {(["CONFIRMED", "COMPLETED", "CANCELLED"] as AppointmentStatus[]).map(
-                        (status) => (
-                          <form
-                            key={status}
-                            action={async () => {
-                              "use server";
-                              await updateAppointmentStatus(apt.id, status);
-                            }}
-                          >
-                            <button
-                              type="submit"
-                              className="border border-border px-2 py-0.5 text-[10px] uppercase hover:border-gold"
-                            >
-                              {status}
-                            </button>
-                          </form>
-                        ),
-                      )}
-                    </div>
+                    <AppointmentStatusButtons
+                      appointmentId={apt.id}
+                      currentStatus={apt.status}
+                      updateStatus={updateAppointmentStatus}
+                    />
                   </td>
                 </tr>
               ))

@@ -23,7 +23,12 @@ import {
 } from "@/actions/portfolio";
 import { prisma } from "@/lib/prisma";
 
-export default async function AdminPortfolioPage() {
+export default async function AdminPortfolioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   const [categories, items] = await Promise.all([
     getPortfolioCategories(),
     getPortfolioItems(),
@@ -32,6 +37,15 @@ export default async function AdminPortfolioPage() {
   async function createCategoryAction(formData: FormData) {
     "use server";
     await createPortfolioCategory(formData);
+    redirect("/admin/portfolio");
+  }
+
+  async function deleteCategoryAction(id: string) {
+    "use server";
+    const result = await deletePortfolioCategory(id);
+    if (!result.success) {
+      redirect(`/admin/portfolio?error=${encodeURIComponent(result.error)}`);
+    }
     redirect("/admin/portfolio");
   }
 
@@ -54,6 +68,12 @@ export default async function AdminPortfolioPage() {
         description="Manage portfolio categories and gallery items"
       />
 
+      {error && (
+        <p className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {error}
+        </p>
+      )}
+
       <section>
         <h2 className="font-serif text-2xl">Categories</h2>
         <form action={createCategoryAction} className="mt-4 border border-border bg-background p-6">
@@ -68,18 +88,29 @@ export default async function AdminPortfolioPage() {
           </div>
         </form>
         <div className="mt-4 grid gap-2">
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="flex items-center justify-between border border-border bg-background px-4 py-3"
-            >
-              <span>
-                {cat.translations.find((t) => t.locale === "de")?.name ?? cat.slug} ·{" "}
-                {cat._count.items} items
-              </span>
-              <DeleteButton action={deletePortfolioCategory.bind(null, cat.id)} label="Delete" />
-            </div>
-          ))}
+          {categories.map((cat) => {
+            const name = cat.translations.find((t) => t.locale === "de")?.name ?? cat.slug;
+            const itemCount = cat._count.items;
+            return (
+              <div
+                key={cat.id}
+                className="flex items-center justify-between border border-border bg-background px-4 py-3"
+              >
+                <span>
+                  {name} · {itemCount} items
+                </span>
+                <DeleteButton
+                  action={deleteCategoryAction.bind(null, cat.id)}
+                  label="Delete"
+                  confirmMessage={
+                    itemCount > 0
+                      ? `Delete "${name}" and all ${itemCount} portfolio item(s)? This cannot be undone.`
+                      : `Delete category "${name}"?`
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
       </section>
 

@@ -148,12 +148,15 @@ export async function updateAppointmentStatus(
     include: appointmentInclude,
   });
 
-  const email = await notifyAppointmentStatusChange(appointment, existing.status);
-  if (!email.ok) {
-    return actionError(`Status updated but email failed: ${email.error}`);
-  }
-
   await logAudit(session.user.id, "UPDATE_STATUS", "Appointment", appointmentId, { status });
   revalidatePath("/admin/appointments");
+  revalidatePath("/admin/calendar");
+
+  void notifyAppointmentStatusChange(appointment, existing.status).then((email) => {
+    if (!email.ok) {
+      console.error("[Email] Status notification failed:", email.error);
+    }
+  });
+
   return actionSuccess();
 }

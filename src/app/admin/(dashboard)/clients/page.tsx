@@ -53,7 +53,15 @@ export default async function AdminClientsPage() {
                   >
                     Edit
                   </Link>
-                  <DeleteButton action={deleteClient.bind(null, client.id)} label="" />
+                  <DeleteButton
+                    action={deleteClient.bind(null, client.id)}
+                    label=""
+                    confirmMessage={
+                      client._count.appointments > 0
+                        ? `Delete ${client.firstName} ${client.lastName} and all ${client._count.appointments} appointment(s)? This cannot be undone.`
+                        : `Delete client ${client.firstName} ${client.lastName}?`
+                    }
+                  />
                 </td>
               </tr>
             ))}

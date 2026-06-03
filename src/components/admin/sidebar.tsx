@@ -24,7 +24,6 @@ const navItems = [
   { href: "/admin/clients", label: "Clients", icon: Users },
   { href: "/admin/services", label: "Services", icon: Briefcase },
   { href: "/admin/portfolio", label: "Portfolio", icon: Image },
-  { href: "/admin/gallery", label: "Gallery", icon: Images },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/media", label: "Media Library", icon: Images },

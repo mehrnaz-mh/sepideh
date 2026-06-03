@@ -55,7 +55,6 @@ export async function createMediaFile(formData: FormData): Promise<ActionResult<
 
   await logAudit(session.user.id, "CREATE", "MediaFile", media.id);
   revalidatePath("/admin/media");
-  revalidatePath("/admin/gallery");
   return actionSuccess({ id: media.id });
 }
 
@@ -102,5 +101,4 @@ export async function deleteMediaFile(id: string): Promise<void> {
   await prisma.mediaFile.delete({ where: { id } });
   await logAudit(session.user.id, "DELETE", "MediaFile", id);
   revalidatePath("/admin/media");
-  revalidatePath("/admin/gallery");
 }

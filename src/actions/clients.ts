@@ -78,14 +78,24 @@ export async function updateClient(id: string, formData: FormData): Promise<Acti
   return actionSuccess();
 }
 
-export async function deleteClient(id: string): Promise<void> {
+export async function deleteClient(id: string): Promise<ActionResult> {
   const session = await requireAdmin();
-  const count = await prisma.appointment.count({ where: { clientId: id } });
-  if (count > 0) throw new Error("Cannot delete client with existing appointments");
+  const appointmentCount = await prisma.appointment.count({ where: { clientId: id } });
 
-  await prisma.client.delete({ where: { id } });
-  await logAudit(session.user.id, "DELETE", "Client", id);
+  await prisma.$transaction(async (tx) => {
+    if (appointmentCount > 0) {
+      await tx.appointment.deleteMany({ where: { clientId: id } });
+    }
+    await tx.client.delete({ where: { id } });
+  });
+
+  await logAudit(session.user.id, "DELETE", "Client", id, {
+    deletedAppointmentCount: appointmentCount,
+  });
   revalidatePath("/admin/clients");
+  revalidatePath("/admin/appointments");
+  revalidatePath("/admin/calendar");
+  return actionSuccess();
 }
 
 export async function toggleClientVip(clientId: string, isVip: boolean): Promise<ActionResult> {

@@ -85,14 +85,26 @@ export async function createPortfolioCategory(formData: FormData): Promise<Actio
   return actionSuccess();
 }
 
-export async function deletePortfolioCategory(id: string): Promise<void> {
+export async function deletePortfolioCategory(id: string): Promise<ActionResult> {
   const session = await requireAdmin();
-  const count = await prisma.portfolioItem.count({ where: { categoryId: id } });
-  if (count > 0) throw new Error("Category has portfolio items");
+  const itemCount = await prisma.portfolioItem.count({ where: { categoryId: id } });
 
-  await prisma.portfolioCategory.delete({ where: { id } });
-  await logAudit(session.user.id, "DELETE", "PortfolioCategory", id);
+  await prisma.$transaction(async (tx) => {
+    if (itemCount > 0) {
+      await tx.portfolioItem.deleteMany({ where: { categoryId: id } });
+    }
+    await tx.portfolioCategory.delete({ where: { id } });
+  });
+
+  await logAudit(session.user.id, "DELETE", "PortfolioCategory", id, {
+    deletedItemCount: itemCount,
+  });
   revalidatePath("/admin/portfolio");
+  revalidatePath("/de/portfolio");
+  revalidatePath("/en/portfolio");
+  revalidatePath("/de");
+  revalidatePath("/en");
+  return actionSuccess();
 }
 
 export async function createPortfolioItem(formData: FormData): Promise<ActionResult<{ id: string }>> {
