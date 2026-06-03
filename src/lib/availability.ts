@@ -104,7 +104,7 @@ export async function getAvailableSlots(
     }
   }
 
-  return slots;
+  return [...new Set(slots)].sort();
 }
 
 export async function isSlotAvailable(
