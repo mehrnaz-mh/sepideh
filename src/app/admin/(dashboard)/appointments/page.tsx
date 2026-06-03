@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/page-header";
-import { AppointmentStatusButtons } from "@/components/admin/appointment-status-buttons";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { getAppointments, deleteAppointment, updateAppointmentStatus } from "@/actions/appointments";
+import type { AppointmentStatus } from "@prisma/client";
+
 const statusVariant: Record<string, "default" | "success" | "warning" | "danger"> = {
   PENDING: "warning",
   CONFIRMED: "success",
@@ -12,8 +14,17 @@ const statusVariant: Record<string, "default" | "success" | "warning" | "danger"
   NO_SHOW: "danger",
 };
 
+const quickStatuses: AppointmentStatus[] = ["CONFIRMED", "COMPLETED", "CANCELLED"];
+
 export default async function AdminAppointmentsPage() {
   const appointments = await getAppointments();
+
+  async function setStatusAction(formData: FormData) {
+    "use server";
+    const appointmentId = String(formData.get("appointmentId"));
+    const status = String(formData.get("status")) as AppointmentStatus;
+    await updateAppointmentStatus(appointmentId, status);
+  }
 
   return (
     <div>
@@ -73,11 +84,26 @@ export default async function AdminAppointmentsPage() {
                         confirmMessage="Delete this appointment?"
                       />
                     </div>
-                    <AppointmentStatusButtons
-                      appointmentId={apt.id}
-                      currentStatus={apt.status}
-                      updateStatus={updateAppointmentStatus}
-                    />
+                    <div className="mt-2 flex flex-wrap justify-end gap-1">
+                      {quickStatuses.map((status) => (
+                        <form key={status} action={setStatusAction}>
+                          <input type="hidden" name="appointmentId" value={apt.id} />
+                          <input type="hidden" name="status" value={status} />
+                          <button
+                            type="submit"
+                            disabled={apt.status === status}
+                            className={cn(
+                              "border px-2 py-0.5 text-[10px] uppercase transition-colors disabled:opacity-60",
+                              apt.status === status
+                                ? "border-gold bg-gold/10"
+                                : "border-border hover:border-gold",
+                            )}
+                          >
+                            {status}
+                          </button>
+                        </form>
+                      ))}
+                    </div>
                   </td>
                 </tr>
               ))

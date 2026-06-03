@@ -36,8 +36,6 @@ type AppointmentEmailOptions = {
   details: DetailRow[];
   statusLabel?: string;
   statusTone?: "pending" | "confirmed" | "cancelled";
-  showCalendarNote?: boolean;
-  googleCalendarUrl?: string;
   ctaPrimary?: { label: string; href: string };
   ctaSecondary?: { label: string; href: string };
 };
@@ -57,8 +55,6 @@ export function renderAppointmentEmail({
   details,
   statusLabel,
   statusTone = "pending",
-  showCalendarNote = false,
-  googleCalendarUrl,
   ctaPrimary,
   ctaSecondary,
 }: AppointmentEmailOptions) {
@@ -97,32 +93,6 @@ export function renderAppointmentEmail({
             </span>
           </td>
         </tr>`
-    : "";
-
-  const calendarNote = showCalendarNote
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;background-color:${colors.background};border:1px solid ${colors.border};">
-        <tr>
-          <td style="padding:20px 24px;">
-            <p style="margin:0 0 12px;font-family:Helvetica,Arial,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${colors.gold};">
-              ${isDe ? "Zum Kalender hinzufügen" : "Add to calendar"}
-            </p>
-            <p style="margin:0 0 16px;font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.65;color:${colors.muted};">
-              ${
-                isDe
-                  ? "iPhone: Öffnen Sie die angehängte Datei <strong>appointment.ics</strong> → tippen Sie oben auf <strong>„Hinzufügen“</strong> (nicht nur „Fertig“). Alternativ:"
-                  : "iPhone: Open the attached <strong>appointment.ics</strong> file → tap <strong>Add</strong> at the top (not only Done). Or:"
-              }
-            </p>
-            ${
-              googleCalendarUrl
-                ? `<a href="${escapeHtml(googleCalendarUrl)}" style="display:inline-block;padding:12px 22px;background-color:${colors.foreground};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">
-                    ${isDe ? "In Google Kalender öffnen" : "Open in Google Calendar"}
-                  </a>`
-                : ""
-            }
-          </td>
-        </tr>
-      </table>`
     : "";
 
   return `<!DOCTYPE html>
@@ -180,7 +150,6 @@ export function renderAppointmentEmail({
                   </td>
                 </tr>
               </table>
-              ${calendarNote}
               <p style="margin:28px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:${colors.muted};">
                 ${escapeHtml(outro)}
               </p>

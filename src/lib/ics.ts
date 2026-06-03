@@ -41,32 +41,6 @@ export function generateIcsEvent({
   return calendar.toString();
 }
 
-/** Google Calendar fallback (works well on iPhone via browser). */
-export function buildGoogleCalendarUrl({
-  title,
-  description,
-  startTime,
-  endTime,
-}: {
-  title: string;
-  description: string;
-  startTime: Date;
-  endTime: Date;
-}) {
-  const format = (date: Date) =>
-    date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-
-  const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: title,
-    dates: `${format(startTime)}/${format(endTime)}`,
-    details: description,
-    location: siteConfig.location,
-  });
-
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
-}
-
 /** Resend/Gmail: UTF-8 string + calendar MIME type. */
 export function buildIcsEmailAttachment(icsContent: string) {
   return {

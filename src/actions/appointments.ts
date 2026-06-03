@@ -133,14 +133,14 @@ export async function deleteAppointment(id: string): Promise<void> {
 export async function updateAppointmentStatus(
   appointmentId: string,
   status: AppointmentStatus,
-): Promise<ActionResult> {
+): Promise<void> {
   const session = await requireAdmin();
 
   const existing = await prisma.appointment.findUnique({
     where: { id: appointmentId },
     select: { status: true },
   });
-  if (!existing) return actionError("Appointment not found");
+  if (!existing) return;
 
   const appointment = await prisma.appointment.update({
     where: { id: appointmentId },
@@ -157,6 +157,4 @@ export async function updateAppointmentStatus(
       console.error("[Email] Status notification failed:", email.error);
     }
   });
-
-  return actionSuccess();
 }

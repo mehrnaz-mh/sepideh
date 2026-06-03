@@ -1,5 +1,12 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
+
+function loadMessages(locale: string) {
+  const filePath = join(process.cwd(), "messages", `${locale}.json`);
+  return JSON.parse(readFileSync(filePath, "utf-8")) as Record<string, unknown>;
+}
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -10,6 +17,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: loadMessages(locale),
   };
 });

@@ -1,11 +1,7 @@
 import type { AppointmentStatus, Prisma } from "@prisma/client";
-import { services, siteConfig } from "@/data/content";
+import { services } from "@/data/content";
 import { renderAdminBookingEmail, renderAppointmentEmail } from "@/lib/email-templates";
-import {
-  buildGoogleCalendarUrl,
-  buildIcsEmailAttachment,
-  generateIcsEvent,
-} from "@/lib/ics";
+import { buildIcsEmailAttachment, generateIcsEvent } from "@/lib/ics";
 import { sendEmail, type SendEmailResult } from "@/lib/resend";
 
 export type AppointmentWithDetails = Prisma.AppointmentGetPayload<{
@@ -69,16 +65,6 @@ function appointmentDetails(appointment: AppointmentWithDetails) {
   ];
 }
 
-function calendarLinks(appointment: AppointmentWithDetails) {
-  const service = serviceTitle(appointment);
-  return buildGoogleCalendarUrl({
-    title: `${service} — ${siteConfig.name}`,
-    description: appointment.notes || service,
-    startTime: appointment.startTime,
-    endTime: appointment.endTime,
-  });
-}
-
 function bookingRequestHtml(appointment: AppointmentWithDetails) {
   const isDe = appointment.locale === "de";
   const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
@@ -99,8 +85,6 @@ function bookingRequestHtml(appointment: AppointmentWithDetails) {
     ],
     statusLabel: isDe ? "Ausstehend" : "Pending",
     statusTone: "pending",
-    showCalendarNote: true,
-    googleCalendarUrl: calendarLinks(appointment),
   });
 }
 
@@ -121,8 +105,6 @@ function bookingConfirmedHtml(appointment: AppointmentWithDetails) {
     details: appointmentDetails(appointment),
     statusLabel: isDe ? "Bestätigt" : "Confirmed",
     statusTone: "confirmed",
-    showCalendarNote: true,
-    googleCalendarUrl: calendarLinks(appointment),
   });
 }
 
