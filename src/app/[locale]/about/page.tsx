@@ -7,6 +7,7 @@ import {
   certifications,
   experienceTimeline,
   siteConfig,
+  siteImages,
 } from "@/data/content";
 import type { Locale } from "@/data/content";
 
@@ -58,13 +59,13 @@ export default async function AboutPage({
       <section className="section-padding">
         <div className="luxury-container grid items-start gap-16 lg:grid-cols-2">
           <FadeIn>
-            <div className="relative aspect-[4/5] overflow-hidden">
+            <div className="relative aspect-[4/5] overflow-hidden bg-background-secondary">
               <Image
-                src="/portfolio/img-002.png"
+                src={siteImages.aboutPortrait}
                 alt={siteConfig.name}
                 fill
-                className="object-cover"
-                sizes="50vw"
+                className="object-cover object-[52%_28%]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </FadeIn>

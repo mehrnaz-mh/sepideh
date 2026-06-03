@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import {
   portfolioCategories as staticCategories,
   portfolioItems as staticItems,
+  siteImages,
 } from "@/data/content";
 import type { Locale } from "@/data/content";
 
@@ -41,7 +42,7 @@ function mapItem(
     categorySlug: item.category.slug,
     featured: item.featured,
     sortOrder: item.sortOrder,
-    image: item.mediaFiles[0]?.url ?? "/portfolio/img-000.png",
+    image: item.mediaFiles[0]?.url ?? siteImages.hero,
     de: {
       title: de?.title ?? item.slug,
       description: de?.description ?? "",

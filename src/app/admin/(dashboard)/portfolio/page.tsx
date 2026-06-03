@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { siteImages } from "@/data/content";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { AdminPageHeader } from "@/components/admin/page-header";
@@ -135,7 +135,7 @@ export default async function AdminPortfolioPage() {
         <h2 className="font-serif text-2xl">Portfolio Items ({items.length})</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => {
-            const image = item.mediaFiles[0]?.url ?? "/portfolio/img-000.png";
+            const image = item.mediaFiles[0]?.url ?? siteImages.hero;
             const title = item.translations.find((t) => t.locale === "de")?.title ?? item.slug;
             return (
               <div key={item.id} className="border border-border bg-background">

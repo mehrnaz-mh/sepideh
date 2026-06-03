@@ -1,3 +1,9 @@
+export const siteImages = {
+  hero: "/sepide/hero.jpg",
+  aboutPreview: "/sepide/AE93EAD2-B5FC-4DB3-8415-9DC5E858E490.JPG",
+  aboutPortrait: "/sepide/319CCBDE-E39A-4DE8-8A21-AF4411C61EDE.JPG",
+} as const;
+
 export const siteConfig = {
   name: "Sepideh Mihanparast",
   tagline: "Beauty Artist",
@@ -273,7 +279,7 @@ export const portfolioItems = [
     categorySlug: "bridal",
     featured: true,
     sortOrder: 1,
-    image: "/portfolio/img-004.png",
+    image: "/portfolio/can-01.jpg",
     de: {
       title: "Classic Elegance",
       description:
@@ -292,7 +298,7 @@ export const portfolioItems = [
     categorySlug: "bridal",
     featured: true,
     sortOrder: 2,
-    image: "/portfolio/img-005.png",
+    image: "/portfolio/can-02.jpg",
     de: {
       title: "Minimalist Look",
       description:
@@ -311,7 +317,7 @@ export const portfolioItems = [
     categorySlug: "bridal",
     featured: true,
     sortOrder: 3,
-    image: "/portfolio/img-006.png",
+    image: "/portfolio/can-03.jpg",
     de: {
       title: "Wedding Day Glam",
       description:
@@ -330,7 +336,7 @@ export const portfolioItems = [
     categorySlug: "cannes-red-carpet",
     featured: true,
     sortOrder: 1,
-    image: "/portfolio/img-009.png",
+    image: "/portfolio/can-04.jpg",
     de: {
       title: "Red Carpet — Parinaz Izadyar",
       description:
@@ -349,7 +355,7 @@ export const portfolioItems = [
     categorySlug: "cannes-red-carpet",
     featured: true,
     sortOrder: 2,
-    image: "/portfolio/img-010.png",
+    image: "/portfolio/can-05.jpg",
     de: {
       title: "Red Carpet — Soha Niasti",
       description:
@@ -368,7 +374,7 @@ export const portfolioItems = [
     categorySlug: "cannes-red-carpet",
     featured: true,
     sortOrder: 3,
-    image: "/portfolio/img-011.png",
+    image: "/portfolio/can-06.jpg",
     de: {
       title: "WIBA Awards — Sasha Ray",
       description:
@@ -387,7 +393,7 @@ export const portfolioItems = [
     categorySlug: "events",
     featured: true,
     sortOrder: 1,
-    image: "/portfolio/img-015.png",
+    image: "/portfolio/can-07.jpg",
     de: {
       title: "WOT Awards — Lilly Becker",
       description:
@@ -406,7 +412,7 @@ export const portfolioItems = [
     categorySlug: "events",
     featured: false,
     sortOrder: 2,
-    image: "/portfolio/img-016.png",
+    image: "/portfolio/can-08.jpg",
     de: {
       title: "Concert — Ayda Rastgoo",
       description:
@@ -425,7 +431,7 @@ export const portfolioItems = [
     categorySlug: "events",
     featured: false,
     sortOrder: 3,
-    image: "/portfolio/img-017.png",
+    image: "/portfolio/can-09.jpg",
     de: {
       title: "Concert — Heliy0m",
       description:
@@ -444,7 +450,7 @@ export const portfolioItems = [
     categorySlug: "editorial",
     featured: true,
     sortOrder: 1,
-    image: "/portfolio/img-021.png",
+    image: "/portfolio/can-10.png",
     de: {
       title: "Editorial Glam",
       description:
@@ -463,7 +469,7 @@ export const portfolioItems = [
     categorySlug: "hairstyles",
     featured: false,
     sortOrder: 1,
-    image: "/portfolio/img-025.png",
+    image: "/portfolio/can-11.png",
     de: {
       title: "Sleek Ponytail",
       description: "Polierter High Ponytail mit glänzendem Finish.",
@@ -480,7 +486,7 @@ export const portfolioItems = [
     categorySlug: "hairstyles",
     featured: false,
     sortOrder: 2,
-    image: "/portfolio/img-026.png",
+    image: "/portfolio/can-12.jpg",
     de: {
       title: "Soft Braided Chignon",
       description: "Soft braided updo mit voluminöser Krone.",
@@ -497,7 +503,7 @@ export const portfolioItems = [
     categorySlug: "hairstyles",
     featured: false,
     sortOrder: 3,
-    image: "/portfolio/img-028.png",
+    image: "/portfolio/can-13.png",
     de: {
       title: "Structured Updo",
       description: "Polierter, strukturierter Low Updo mit Perlen-Accessoire.",
@@ -514,7 +520,7 @@ export const portfolioItems = [
     categorySlug: "hairstyles",
     featured: true,
     sortOrder: 4,
-    image: "/portfolio/img-029.png",
+    image: "/portfolio/can-14.jpg",
     de: {
       title: "Soft Waves with Hijab",
       description: "Soft, loose Wellen kombiniert mit Hijab für einen modernen Look.",
@@ -531,7 +537,7 @@ export const portfolioItems = [
     categorySlug: "eastern-bride",
     featured: true,
     sortOrder: 1,
-    image: "/portfolio/img-031.png",
+    image: "/portfolio/can-15.png",
     de: {
       title: "Eastern-Inspired Bridal",
       description:
@@ -550,7 +556,7 @@ export const portfolioItems = [
     categorySlug: "makeup",
     featured: false,
     sortOrder: 1,
-    image: "/portfolio/img-023.png",
+    image: "/portfolio/can-16.png",
     de: {
       title: "Hollywood Wave Styling",
       description: "Klassische Hollywood Waves mit elegantem Finish.",
@@ -567,7 +573,7 @@ export const portfolioItems = [
     categorySlug: "makeup",
     featured: true,
     sortOrder: 2,
-    image: "/portfolio/img-024.png",
+    image: "/portfolio/can-17.jpg",
     de: {
       title: "Soft Glam Makeup",
       description: "Luminöses Soft Glam Make-up für Events und Brautlooks.",

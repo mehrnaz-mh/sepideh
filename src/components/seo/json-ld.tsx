@@ -1,4 +1,4 @@
-import { siteConfig } from "@/data/content";
+import { siteConfig, siteImages } from "@/data/content";
 
 interface JsonLdProps {
   data: Record<string, unknown> | Record<string, unknown>[];
@@ -32,7 +32,7 @@ export function localBusinessSchema(locale: string) {
     },
     sameAs: [siteConfig.instagram],
     priceRange: "€€€",
-    image: `${process.env.NEXT_PUBLIC_SITE_URL}/portfolio/img-000.png`,
+    image: `${process.env.NEXT_PUBLIC_SITE_URL}${siteImages.hero}`,
   };
 }
 

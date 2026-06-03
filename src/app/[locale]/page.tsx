@@ -15,6 +15,7 @@ import {
   faqItems,
   services,
   siteConfig,
+  siteImages,
   testimonials,
 } from "@/data/content";
 import { getPublicPortfolioItems } from "@/lib/portfolio-public";
@@ -53,46 +54,49 @@ export default async function HomePage({
     <>
       <JsonLd data={[localBusinessSchema(locale), personSchema(locale), faqSchema(faqData)]} />
 
-      {/* Hero */}
-      <section className="relative min-h-[90vh] overflow-hidden bg-background-secondary md:min-h-[calc(100svh-5rem)]">
-        <div className="absolute inset-0">
+      {/* Hero — mobile: image then copy; lg+: 50/50 split, clean photo (no overlay) */}
+      <section className="flex flex-col bg-background-secondary lg:grid lg:min-h-[calc(100svh-5rem)] lg:grid-cols-2">
+        <div className="relative order-1 aspect-[3/4] w-full sm:aspect-[4/5] lg:order-2 lg:aspect-auto lg:min-h-[calc(100svh-5rem)]">
           <Image
-            src="/portfolio/img-000.png"
+            src={siteImages.hero}
             alt="Sepideh Mihanparast Beauty Artist"
             fill
             priority
-            className="object-cover object-[48%_30%] opacity-90 md:object-[54%_28%] lg:object-[56%_26%]"
-            sizes="100vw"
+            className="object-cover object-[42%_22%] sm:object-[40%_20%] lg:object-[38%_center]"
+            sizes="(max-width: 1023px) 100vw, 50vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 via-45% to-transparent md:from-background/95 md:via-background/60 md:via-[42%] md:to-transparent" />
         </div>
-        <div className="luxury-container relative flex min-h-[90vh] flex-col justify-center py-24 md:min-h-[calc(100svh-5rem)] md:py-20">
-          <div className="relative z-10 max-w-xs sm:max-w-sm md:max-w-md">
+
+        <div className="order-2 flex flex-col justify-center px-6 py-12 sm:px-10 sm:py-14 lg:order-1 lg:px-12 lg:py-16 xl:px-16 xl:py-20 2xl:px-20">
+          <div className="mx-auto w-full max-w-lg lg:mx-0 lg:max-w-md xl:max-w-lg">
             <FadeIn>
               <p className="text-xs uppercase tracking-[0.4em] text-gold">
                 {siteConfig.tagline}
               </p>
             </FadeIn>
-            <TextReveal as="h1" className="mt-6 font-serif text-4xl leading-[1.1] md:text-5xl lg:text-6xl">
+            <TextReveal
+              as="h1"
+              className="mt-5 font-serif text-[2.5rem] leading-[1.08] sm:text-5xl lg:mt-6 lg:text-[3.25rem] xl:text-6xl"
+            >
               {t("heroTitle")}
             </TextReveal>
             <FadeIn delay={0.2}>
-              <p className="mt-4 text-sm font-medium uppercase tracking-[0.25em] text-foreground md:text-base lg:text-lg [text-shadow:0_1px_24px_rgba(255,255,255,0.85)]">
+              <p className="mt-5 text-xs font-medium uppercase tracking-[0.22em] text-foreground sm:text-sm lg:mt-6 lg:text-base lg:tracking-[0.25em]">
                 <span className="block">{t("heroSubtitleLine1")}</span>
                 <span className="block">{t("heroSubtitleLine2")}</span>
               </p>
             </FadeIn>
             <FadeIn delay={0.3}>
-              <p className="mt-6 text-lg text-foreground/85 [text-shadow:0_1px_24px_rgba(255,255,255,0.85)]">
+              <p className="mt-5 max-w-sm text-base leading-relaxed text-foreground/90 sm:text-lg lg:mt-6">
                 <span className="block">{t("heroDescriptionLine1")}</span>
                 <span className="block">{t("heroDescriptionLine2")}</span>
               </p>
             </FadeIn>
-            <FadeIn delay={0.4} className="mt-10 flex flex-wrap gap-4">
-              <Button asChild variant="gold">
+            <FadeIn delay={0.4} className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
+              <Button asChild variant="gold" className="w-full sm:w-auto">
                 <Link href="/booking">{tc("bookNow")}</Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full sm:w-auto">
                 <Link href="/portfolio">{tc("viewPortfolio")}</Link>
               </Button>
             </FadeIn>
@@ -104,13 +108,13 @@ export default async function HomePage({
       <section className="section-padding">
         <div className="luxury-container grid items-center gap-16 lg:grid-cols-2">
           <FadeIn>
-            <div className="relative aspect-[4/5] overflow-hidden">
+            <div className="relative aspect-[4/5] overflow-hidden bg-background-secondary">
               <Image
-                src="/portfolio/img-001.png"
+                src={siteImages.aboutPreview}
                 alt={siteConfig.name}
                 fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover object-[50%_22%]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </FadeIn>
