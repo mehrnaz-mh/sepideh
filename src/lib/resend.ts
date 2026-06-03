@@ -15,6 +15,12 @@ export type SendEmailResult =
   | { ok: true; id?: string }
   | { ok: false; error: string; mock?: boolean };
 
+type EmailAttachment = {
+  filename: string;
+  content: string | Buffer;
+  contentType?: string;
+};
+
 export async function sendEmail({
   to,
   subject,
@@ -24,7 +30,7 @@ export async function sendEmail({
   to: string | string[];
   subject: string;
   html: string;
-  attachments?: { filename: string; content: string }[];
+  attachments?: EmailAttachment[];
 }): Promise<SendEmailResult> {
   if (!resend) {
     console.warn(

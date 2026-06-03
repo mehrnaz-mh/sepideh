@@ -67,11 +67,11 @@ export function buildGoogleCalendarUrl({
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-/** Resend/Gmail: UTF-8 buffer + calendar MIME type. */
+/** Resend/Gmail: UTF-8 string + calendar MIME type. */
 export function buildIcsEmailAttachment(icsContent: string) {
   return {
     filename: "appointment.ics",
-    content: Buffer.from(icsContent, "utf-8"),
+    content: icsContent,
     contentType: "text/calendar; charset=utf-8",
   };
 }
