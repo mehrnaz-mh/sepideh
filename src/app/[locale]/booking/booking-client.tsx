@@ -132,7 +132,6 @@ export default function BookingPage() {
           (label, i) => (
             <div
               key={label}
-              style={{ borderRadius: 0 }}
               className={`flex-1 border-b-2 pb-2 text-center text-xs uppercase tracking-widest ${
                 i <= step ? "border-gold text-gold" : "border-border text-muted"
               }`}
