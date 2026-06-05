@@ -286,7 +286,7 @@ export default function BookingPage() {
                         </button>
                         {showYearPicker && (
                           <div className="absolute top-full left-0 z-50 mt-1 border border-border bg-background shadow-lg">
-                            {[2025, 2026, 2027].map(y => (
+                            {Array.from({ length: 3 }, (_, i) => new Date().getFullYear() + i).map(y => (
                               <button
                                 key={y}
                                 type="button"
