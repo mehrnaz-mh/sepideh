@@ -1,12 +1,9 @@
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FadeIn } from "@/components/motion/fade-in";
 import { MapPin, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/data/content";
+import { BookingClient } from "./booking-dynamic";
 import type { Metadata } from "next";
-
-const BookingClient = dynamic(() => import("./booking-client"), { ssr: false });
 
 export async function generateMetadata({
   params,
@@ -38,38 +35,6 @@ export async function generateMetadata({
   };
 }
 
-function BookingSkeleton({ locale }: { locale: string }) {
-  const steps = locale === "de"
-    ? ["Service", "Datum", "Uhrzeit", "Details"]
-    : ["Service", "Date", "Time", "Details"];
-
-  return (
-    <>
-      <div className="mt-10 flex gap-2">
-        {steps.map((label, i) => (
-          <div
-            key={label}
-            className={`flex-1 border-b-2 pb-2 text-center text-xs uppercase tracking-widest ${
-              i === 0 ? "border-gold text-gold" : "border-border text-muted"
-            }`}
-          >
-            {label}
-          </div>
-        ))}
-      </div>
-      <div className="section-padding">
-        <div className="animate-pulse space-y-4">
-          <div className="h-6 w-48 bg-border rounded" />
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <div key={i} className="h-20 bg-border rounded" />
-            ))}
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
 
 export default async function BookingPageWrapper({
   params,
@@ -117,9 +82,7 @@ export default async function BookingPageWrapper({
             </div>
           </div>
 
-          <Suspense fallback={<BookingSkeleton locale={locale} />}>
-            <BookingClient />
-          </Suspense>
+          <BookingClient />
         </div>
       </section>
     </>
