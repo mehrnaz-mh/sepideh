@@ -7,7 +7,6 @@ import {
   FileText,
   Image,
   LayoutDashboard,
-  MessageSquare,
   Settings,
   Star,
   Users,
@@ -19,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
-  { href: "/admin/appointments", label: "Appointments", icon: Calendar },
+  { href: "/admin/appointments", label: "Appointments", icon: Calendar, badge: true },
   { href: "/admin/calendar", label: "Calendar", icon: Calendar },
   { href: "/admin/clients", label: "Clients", icon: Users },
   { href: "/admin/services", label: "Services", icon: Briefcase },
@@ -31,7 +30,7 @@ const navItems = [
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({ pendingCount = 0 }: { pendingCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -59,7 +58,12 @@ export function AdminSidebar() {
               )}
             >
               <item.icon size={18} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.badge && pendingCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded bg-red-500 px-1.5 text-[11px] font-semibold text-white">
+                  {pendingCount}
+                </span>
+              )}
             </Link>
           );
         })}

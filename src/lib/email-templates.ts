@@ -98,10 +98,10 @@ export function renderAppointmentEmail({
     .map(
       (row) => `
         <tr>
-          <td style="padding:14px 0;border-bottom:1px solid ${colors.border};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.muted};width:32%;vertical-align:top;">
+          <td style="padding:12px 20px 12px 0;border-bottom:1px solid ${colors.border};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.muted};white-space:nowrap;vertical-align:middle;width:1%;">
             ${escapeHtml(row.label)}
           </td>
-          <td style="padding:14px 0;border-bottom:1px solid ${colors.border};font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:${colors.foreground};vertical-align:top;">
+          <td style="padding:12px 0;border-bottom:1px solid ${colors.border};font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:${colors.foreground};vertical-align:middle;">
             ${escapeHtml(row.value)}
           </td>
         </tr>`,
@@ -111,12 +111,12 @@ export function renderAppointmentEmail({
   const ctaHtml = (ctaPrimary || ctaSecondary)
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:32px;">
         ${ctaPrimary ? `<tr><td style="padding-bottom:10px;">
-          <a href="${escapeHtml(ctaPrimary.href)}" style="display:inline-block;padding:14px 28px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+          <a href="${escapeHtml(ctaPrimary.href)}" style="display:inline-block;padding:12px 24px;width:180px;text-align:center;box-sizing:border-box;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
             ${escapeHtml(ctaPrimary.label)}
           </a>
         </td></tr>` : ""}
         ${ctaSecondary ? `<tr><td>
-          <a href="${escapeHtml(ctaSecondary.href)}" style="display:inline-block;padding:13px 26px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+          <a href="${escapeHtml(ctaSecondary.href)}" style="display:inline-block;padding:12px 24px;width:180px;text-align:center;box-sizing:border-box;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
             ${escapeHtml(ctaSecondary.label)}
           </a>
         </td></tr>` : ""}
@@ -230,12 +230,12 @@ export function renderAdminBookingEmail({
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
             <tr><td style="padding-bottom:10px;">
-              <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:12px 24px;background-color:${colors.green};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+              <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:12px 24px;width:200px;text-align:center;box-sizing:border-box;background-color:${colors.green};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
                 ✓ Im Admin öffnen
               </a>
             </td></tr>
             <tr><td>
-              <a href="${escapeHtml(adminUrl)}" style="display:inline-block;padding:12px 24px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+              <a href="${escapeHtml(adminUrl)}" style="display:inline-block;padding:12px 24px;width:200px;text-align:center;box-sizing:border-box;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
                 Alle Termine
               </a>
             </td></tr>
@@ -337,28 +337,27 @@ export function renderConfirmationEmail({
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${gcalTitle}&dates=${gcalStart}/${gcalEnd}&details=${gcalDetails}&location=${gcalLocation}&sf=true&output=xml`;
   const icalUrl = `${siteUrl()}/api/appointments/${appointmentId}/ical`;
 
+  const btnStyle = `display:inline-block;padding:10px 20px;width:180px;text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:${radius};box-sizing:border-box;`;
+
   const calendarHtml = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;border:1px solid ${colors.border};background-color:${colors.background};border-radius:${radius};">
       <tr>
         <td style="padding:20px 24px;">
-          <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.muted};">
+          <p style="margin:0 0 10px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.muted};">
             ${isDe ? "Zum Kalender hinzufügen" : "Add to calendar"}
           </p>
-          <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:10px;">
+          <table role="presentation" cellpadding="0" cellspacing="0">
             <tr><td style="padding-bottom:8px;">
-              <a href="${escapeHtml(googleCalendarUrl)}" target="_blank" style="display:inline-block;padding:10px 20px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+              <a href="${escapeHtml(googleCalendarUrl)}" target="_blank" style="${btnStyle}background-color:${colors.gold};color:#ffffff;">
                 Google Calendar
               </a>
             </td></tr>
             <tr><td>
-              <a href="${escapeHtml(icalUrl)}" style="display:inline-block;padding:9px 18px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+              <a href="${escapeHtml(icalUrl)}" style="${btnStyle}border:1px solid ${colors.foreground};color:${colors.foreground};">
                 iCal / Outlook
               </a>
             </td></tr>
           </table>
-          <p style="margin:12px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:${colors.muted};">
-            📍 <a href="${siteConfig.googleMapsUrl}" target="_blank" style="color:${colors.gold};text-decoration:none;">${escapeHtml(siteConfig.addressFull)} ${isDe ? "auf Google Maps ansehen" : "— view on Google Maps"}</a>
-          </p>
         </td>
       </tr>
     </table>`;
@@ -380,7 +379,7 @@ export function renderConfirmationEmail({
       { label: isDe ? "Adresse" : "Address", value: siteConfig.addressFull },
     ],
     statusTone: "confirmed",
-    ctaPrimary: { label: isDe ? "Auf Google Maps" : "Google Maps", href: siteConfig.googleMapsUrl },
+    ctaPrimary: { label: isDe ? "Google Maps" : "Google Maps", href: siteConfig.googleMapsUrl },
     ctaSecondary: { label: "WhatsApp", href: siteConfig.whatsappUrl },
     extraHtml: calendarHtml,
   });

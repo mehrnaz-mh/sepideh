@@ -1,6 +1,7 @@
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { ToastNotification } from "@/components/admin/toast-notification";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -15,9 +16,14 @@ export default async function AdminDashboardLayout({
     redirect("/admin/login");
   }
 
+  let pendingCount = 0;
+  try {
+    pendingCount = await prisma.appointment.count({ where: { status: "PENDING" } });
+  } catch {}
+
   return (
     <div className="min-h-screen bg-background-secondary">
-      <AdminSidebar />
+      <AdminSidebar pendingCount={pendingCount} />
       <div className="pl-64">
         <header className="flex h-16 items-center justify-between border-b border-border bg-background px-8">
           <p className="text-sm text-muted">

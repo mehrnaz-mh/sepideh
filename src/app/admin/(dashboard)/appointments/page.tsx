@@ -9,6 +9,7 @@ import {
   rejectAppointment,
 } from "@/actions/appointments";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AppointmentStatus } from "@prisma/client";
 
 const statusVariant: Record<string, "default" | "success" | "warning" | "danger"> = {
@@ -27,19 +28,25 @@ const statusLabel: Record<string, string> = {
   NO_SHOW: "Nicht erschienen",
 };
 
+const PAGE_SIZE = 15;
+
 export default async function AdminAppointmentsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ filter?: string; page?: string }>;
 }) {
-  const { filter } = await searchParams;
+  const { filter, page } = await searchParams;
   const activeFilter = (filter as AppointmentStatus | "ALL" | undefined) ?? "ALL";
+  const currentPage = Math.max(1, parseInt(page ?? "1", 10));
   const allAppointments = await getAppointments();
 
-  const appointments =
+  const filtered =
     activeFilter === "ALL"
       ? allAppointments
       : allAppointments.filter((a) => a.status === activeFilter);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const appointments = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const tabs: Array<{ key: string; label: string }> = [
     { key: "ALL", label: "Alle" },
@@ -48,6 +55,14 @@ export default async function AdminAppointmentsPage({
     { key: "COMPLETED", label: "Abgeschlossen" },
     { key: "CANCELLED", label: "Storniert" },
   ];
+
+  function pageHref(p: number) {
+    const params = new URLSearchParams();
+    if (activeFilter !== "ALL") params.set("filter", activeFilter);
+    if (p > 1) params.set("page", String(p));
+    const q = params.toString();
+    return `/admin/appointments${q ? `?${q}` : ""}`;
+  }
 
   async function confirmAction(formData: FormData) {
     "use server";
@@ -99,7 +114,7 @@ export default async function AdminAppointmentsPage({
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-background-secondary">
             <tr>
-              <th className="px-4 py-3 text-left font-medium">Kunde</th>
+              <th className="px-4 py-3 text-left font-medium w-1/4">Kunde</th>
               <th className="px-4 py-3 text-left font-medium">Telefon</th>
               <th className="px-4 py-3 text-left font-medium">Leistung</th>
               <th className="px-4 py-3 text-left font-medium">Termin</th>
@@ -117,11 +132,16 @@ export default async function AdminAppointmentsPage({
             ) : (
               appointments.map((apt) => (
                 <tr key={apt.id} className="border-b border-border">
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 w-1/4">
                     <div className="font-medium">
                       {apt.client.firstName} {apt.client.lastName}
                     </div>
-                    <div className="text-xs text-muted">{apt.client.email}</div>
+                    <div className="text-xs text-muted break-all">{apt.client.email}</div>
+                    {apt.notes && (
+                      <div className="mt-1 text-xs text-muted italic line-clamp-2" title={apt.notes}>
+                        {apt.notes}
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     {apt.client.phone ? (
@@ -156,12 +176,13 @@ export default async function AdminAppointmentsPage({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col items-end gap-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <Link
                           href={`/admin/appointments/${apt.id}/edit`}
-                          className="text-xs uppercase tracking-wide text-gold hover:underline"
+                          className="text-muted hover:text-gold transition-colors"
+                          title="Bearbeiten"
                         >
-                          Bearbeiten
+                          <Pencil size={15} />
                         </Link>
                         <DeleteButton
                           action={deleteAppointment.bind(null, apt.id)}
@@ -172,7 +193,6 @@ export default async function AdminAppointmentsPage({
 
                       {apt.status === "PENDING" && (
                         <div className="flex flex-col gap-2 w-full items-end">
-                          {/* Confirm */}
                           <form action={confirmAction}>
                             <input type="hidden" name="appointmentId" value={apt.id} />
                             <button
@@ -182,7 +202,6 @@ export default async function AdminAppointmentsPage({
                               ✓ Bestätigen
                             </button>
                           </form>
-                          {/* Reject with optional reason */}
                           <details className="w-full">
                             <summary className="cursor-pointer border border-red-300 bg-red-50 px-3 py-1 text-[11px] uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors list-none text-right">
                               ✕ Ablehnen
@@ -206,11 +225,6 @@ export default async function AdminAppointmentsPage({
                         </div>
                       )}
 
-                      {apt.notes && (
-                        <p className="max-w-[200px] text-right text-xs text-muted italic">
-                          {apt.notes}
-                        </p>
-                      )}
                     </div>
                   </td>
                 </tr>
@@ -219,6 +233,39 @@ export default async function AdminAppointmentsPage({
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between text-sm text-muted">
+          <span>{filtered.length} Termine · Seite {currentPage} von {totalPages}</span>
+          <div className="flex items-center gap-1">
+            {currentPage > 1 && (
+              <Link href={pageHref(currentPage - 1)} className="flex items-center gap-1 border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
+                <ChevronLeft size={14} /> Zurück
+              </Link>
+            )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <Link
+                key={p}
+                href={pageHref(p)}
+                className={cn(
+                  "border px-3 py-1.5 transition-colors",
+                  p === currentPage
+                    ? "border-gold bg-gold/10 text-gold"
+                    : "border-border hover:border-gold hover:text-gold"
+                )}
+              >
+                {p}
+              </Link>
+            ))}
+            {currentPage < totalPages && (
+              <Link href={pageHref(currentPage + 1)} className="flex items-center gap-1 border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
+                Weiter <ChevronRight size={14} />
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

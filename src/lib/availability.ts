@@ -71,9 +71,7 @@ export async function getAvailableSlots(
   });
 
   const slots: string[] = [];
-  // Minimum 2-hour gap between appointments
-  const effectiveBuffer = Math.max(bufferMinutes, 120);
-  const totalDuration = serviceDuration + effectiveBuffer;
+  const totalDuration = serviceDuration + bufferMinutes;
 
   for (const rule of rules) {
     let current = parseTime(date, rule.startTime);
@@ -94,7 +92,7 @@ export async function getAvailableSlots(
       });
 
       const hasConflict = appointments.some((apt) => {
-        const aptEndWithBuffer = addMinutes(apt.endTime, effectiveBuffer);
+        const aptEndWithBuffer = addMinutes(apt.endTime, bufferMinutes);
         return current < aptEndWithBuffer && slotWithBuffer > apt.startTime;
       });
 
@@ -118,8 +116,7 @@ export async function getAvailableDates(
 ): Promise<string[]> {
   if (dates.length === 0) return [];
 
-  const effectiveBuffer = Math.max(bufferMinutes, 120);
-  const totalDuration = serviceDuration + effectiveBuffer;
+  const totalDuration = serviceDuration + bufferMinutes;
 
   const firstDate = parse(dates[0], "yyyy-MM-dd", new Date());
   const lastDate = parse(dates[dates.length - 1], "yyyy-MM-dd", new Date());
@@ -184,7 +181,7 @@ export async function getAvailableDates(
         });
 
         const hasConflict = dayAppointments.some((apt) => {
-          const aptEndWithBuffer = addMinutes(apt.endTime, effectiveBuffer);
+          const aptEndWithBuffer = addMinutes(apt.endTime, bufferMinutes);
           return current < aptEndWithBuffer && slotWithBuffer > apt.startTime;
         });
 

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Calendar, Clock, Star, Users } from "lucide-react";
+import Link from "next/link";
 
 async function getStats() {
   try {
@@ -28,6 +29,7 @@ export default async function AdminDashboardPage() {
   let recentAppointments: {
     id: string;
     startTime: Date;
+    createdAt: Date;
     status: string;
     serviceId: string;
     client: { firstName: string; lastName: string };
@@ -36,7 +38,7 @@ export default async function AdminDashboardPage() {
 
   try {
     recentAppointments = await prisma.appointment.findMany({
-      take: 5,
+      take: 10,
       orderBy: { createdAt: "desc" },
       include: {
         client: true,
@@ -68,7 +70,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mt-12">
-        <h2 className="font-serif text-2xl">Recent Appointments</h2>
+        <h2 className="font-serif text-2xl">Upcoming Appointments</h2>
         <div className="mt-4 overflow-x-auto border border-border bg-background">
           <table className="w-full text-sm">
             <thead className="border-b border-border bg-background-secondary">
@@ -88,9 +90,11 @@ export default async function AdminDashboardPage() {
                 </tr>
               ) : (
                 recentAppointments.map((apt) => (
-                  <tr key={apt.id} className="border-b border-border">
+                  <tr key={apt.id} className="border-b border-border hover:bg-background-secondary/50">
                     <td className="px-4 py-3">
-                      {apt.client.firstName} {apt.client.lastName}
+                      <Link href={`/admin/appointments/${apt.id}/edit`} className="hover:text-gold">
+                        {apt.client.firstName} {apt.client.lastName}
+                      </Link>
                     </td>
                     <td className="px-4 py-3">
                       {apt.service.translations[0]?.title ?? apt.serviceId}
@@ -99,8 +103,14 @@ export default async function AdminDashboardPage() {
                       {apt.startTime.toLocaleString("de-DE")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded bg-background-secondary px-2 py-1 text-xs uppercase">
-                        {apt.status}
+                      <span className={`rounded px-2 py-1 text-xs uppercase ${
+                        apt.status === "PENDING"
+                          ? "bg-amber-100 text-amber-800"
+                          : apt.status === "CONFIRMED"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-background-secondary text-muted"
+                      }`}>
+                        {apt.status === "PENDING" ? "Ausstehend" : apt.status === "CONFIRMED" ? "Bestätigt" : apt.status}
                       </span>
                     </td>
                   </tr>
