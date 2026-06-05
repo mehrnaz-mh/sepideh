@@ -1,10 +1,12 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FadeIn } from "@/components/motion/fade-in";
 import { MapPin, MessageCircle } from "lucide-react";
-import { siteConfig, services } from "@/data/content";
-import BookingClient from "./booking-client";
+import { siteConfig } from "@/data/content";
 import type { Metadata } from "next";
+
+const BookingClient = dynamic(() => import("./booking-client"), { ssr: false });
 
 export async function generateMetadata({
   params,
