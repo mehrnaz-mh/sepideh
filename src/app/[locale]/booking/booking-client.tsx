@@ -495,7 +495,7 @@ export default function BookingPage() {
                     )}
                   </label>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-wrap justify-between gap-3">
                   <Button type="button" variant="outline" onClick={prevStep}>
                     <ChevronLeft size={16} /> {tc("back")}
                   </Button>
