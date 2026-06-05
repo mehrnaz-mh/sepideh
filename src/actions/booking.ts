@@ -1,7 +1,7 @@
 "use server";
 
 import { addMinutes, parse } from "date-fns";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { isSlotAvailable } from "@/lib/availability";
 import {
@@ -139,11 +139,19 @@ export async function getAvailableSlotsAction(
   return getAvailableSlots(parsedDate, duration, buffer);
 }
 
+const getCachedAvailableDates = unstable_cache(
+  async (serviceSlug: string, dates: string[]) => {
+    const { getAvailableDates } = await import("@/lib/availability");
+    const { duration, buffer } = await getServiceTiming(serviceSlug);
+    return getAvailableDates(dates, duration, buffer);
+  },
+  ["available-dates"],
+  { revalidate: 300 }, // 5 minutes
+);
+
 export async function getAvailableDatesAction(
   serviceSlug: string,
   dates: string[],
 ) {
-  const { getAvailableDates } = await import("@/lib/availability");
-  const { duration, buffer } = await getServiceTiming(serviceSlug);
-  return getAvailableDates(dates, duration, buffer);
+  return getCachedAvailableDates(serviceSlug, dates);
 }

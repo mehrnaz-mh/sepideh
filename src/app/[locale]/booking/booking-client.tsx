@@ -205,7 +205,30 @@ export default function BookingPage() {
             <FadeIn>
               <h2 className="text-2xl">{t("selectDate")}</h2>
               {loadingDates ? (
-                <p className="mt-6 text-muted">{t("loadingDates")}</p>
+                <div className="mt-6 flex justify-center">
+                  <div className="w-full max-w-2xl animate-pulse">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="h-8 w-8 rounded bg-border" />
+                      <div className="flex gap-2">
+                        <div className="h-8 w-24 rounded bg-border" />
+                        <div className="h-8 w-16 rounded bg-border" />
+                      </div>
+                      <div className="h-8 w-8 rounded bg-border" />
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 mb-1">
+                      {Array.from({ length: 7 }).map((_, i) => (
+                        <div key={i} className="h-6 rounded bg-border" />
+                      ))}
+                    </div>
+                    {Array.from({ length: 5 }).map((_, row) => (
+                      <div key={row} className="grid grid-cols-7 gap-0.5 mb-0.5">
+                        {Array.from({ length: 7 }).map((_, col) => (
+                          <div key={col} className="h-10 rounded bg-border opacity-70" />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <>
                   {/* Calendar header */}
