@@ -74,7 +74,7 @@ export function Header() {
 
         <div className="hidden items-center gap-4 lg:flex">
           <LocaleSwitcher currentLocale={locale} />
-          <Button asChild variant="gold">
+          <Button asChild variant="gold" className="py-2">
             <Link href="/booking">{t("booking")}</Link>
           </Button>
         </div>

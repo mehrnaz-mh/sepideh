@@ -117,6 +117,10 @@ h6 {
   background: var(--beige-soft);
 }
 
+.divider {
+  border-color: var(--beige-soft) !important;
+}
+
 .text-balance {
   text-wrap: balance;
 }

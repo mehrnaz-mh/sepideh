@@ -104,12 +104,12 @@ export default async function ServicesPage({
               return (
                 <div key={group.title}>
                   <FadeIn>
-                    <div className={`mb-2 flex items-center gap-4 ${group.featured ? "text-gold" : ""}`}>
-                      <div className={`h-px flex-1 ${group.featured ? "bg-gold" : "bg-border"}`} />
-                      <h2 className={`text-xs uppercase tracking-[0.25em] ${group.featured ? "text-gold font-semibold" : "text-muted"}`}>
+                    <div className="mb-2 flex items-center gap-4">
+                      <div className="h-px flex-1 bg-beige-soft" />
+                      <h2 className="text-xs uppercase tracking-[0.25em] text-beige-soft">
                         {group.title}
                       </h2>
-                      <div className={`h-px flex-1 ${group.featured ? "bg-gold" : "bg-border"}`} />
+                      <div className="h-px flex-1 bg-beige-soft" />
                     </div>
                   </FadeIn>
 
@@ -166,7 +166,7 @@ export default async function ServicesPage({
             })}
           </div>
 
-          <FadeIn className="mx-auto mt-20 max-w-5xl border-t border-border pt-16 text-center">
+          <FadeIn className="mx-auto mt-20 max-w-5xl border-t border-beige-soft pt-16 text-center">
             <p className="text-sm uppercase tracking-[0.2em] text-muted">
               {t("ctaHint")}
             </p>

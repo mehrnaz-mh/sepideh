@@ -133,7 +133,7 @@ export default function BookingPage() {
             <div
               key={label}
               className={`flex-1 border-b-2 pb-2 text-center text-xs uppercase tracking-widest ${
-                i <= step ? "border-gold text-gold" : "border-border text-muted"
+                i <= step ? "border-beige-soft text-beige-soft" : "border-beige-soft/40 text-beige-soft/40"
               }`}
             >
               {label}
