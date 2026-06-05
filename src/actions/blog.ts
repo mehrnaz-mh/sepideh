@@ -104,7 +104,7 @@ export async function createBlogPost(formData: FormData): Promise<ActionResult<{
   let featuredImageId: string | null = null;
   if (featuredImageUrl) {
     const media = await prisma.mediaFile.create({
-      data: { url: featuredImageUrl, folder: "blog" },
+      data: { url: featuredImageUrl, secureUrl: featuredImageUrl, folder: "blog" },
     });
     featuredImageId = media.id;
   }
@@ -178,7 +178,7 @@ export async function updateBlogPost(id: string, formData: FormData): Promise<Ac
   let featuredImageId = existing?.featuredImageId ?? null;
   if (featuredImageUrl) {
     const media = await prisma.mediaFile.create({
-      data: { url: featuredImageUrl, folder: "blog" },
+      data: { url: featuredImageUrl, secureUrl: featuredImageUrl, folder: "blog" },
     });
     featuredImageId = media.id;
   }
