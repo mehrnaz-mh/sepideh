@@ -16,6 +16,8 @@ const colors = {
   redBorder: "#e8c4c4",
 };
 
+const radius = "6px";
+
 function siteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://sepidehmihanparast.de").replace(/\/$/, "");
 }
@@ -53,7 +55,7 @@ function statusColors(tone: "pending" | "confirmed" | "cancelled" | "rejected") 
 function emailFooterHtml(isDe: boolean) {
   return `
     <tr>
-      <td style="padding:28px 40px 36px;background-color:${colors.background};border-top:1px solid ${colors.border};text-align:center;">
+      <td style="padding:28px 40px 36px;background-color:${colors.background};border-top:1px solid ${colors.border};text-align:center;border-radius:0 0 ${radius} ${radius};">
         <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:${colors.foreground};">
           ${escapeHtml(siteConfig.street)}, ${escapeHtml(siteConfig.postalCode)} ${escapeHtml(siteConfig.city)}
         </p>
@@ -90,14 +92,6 @@ export function renderAppointmentEmail({
 }: AppointmentEmailOptions) {
   const isDe = locale === "de";
   const safeName = escapeHtml(clientName);
-  const primaryCta = ctaPrimary ?? {
-    label: isDe ? "Zur Website" : "Visit website",
-    href: `${siteUrl()}/${isDe ? "de" : "en"}/booking`,
-  };
-  const secondaryCta = ctaSecondary ?? {
-    label: "Portfolio",
-    href: `${siteUrl()}/${isDe ? "de" : "en"}/portfolio`,
-  };
   const statusStyle = statusColors(statusTone);
 
   const detailRows = details
@@ -114,46 +108,20 @@ export function renderAppointmentEmail({
     )
     .join("");
 
-  const statusBadge = statusLabel
-    ? `
-        <tr>
-          <td colspan="2" style="padding:20px 0 0;">
-            <span style="display:inline-block;padding:8px 14px;border:1px solid ${statusStyle.border};background:${statusStyle.bg};color:${statusStyle.text};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;">
-              ${escapeHtml(statusLabel)}
-            </span>
-          </td>
-        </tr>`
-    : "";
-
-  const ctaHtml = ctaPrimary || ctaSecondary
+  const ctaHtml = (ctaPrimary || ctaSecondary)
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:32px;">
-        <tr>
-          ${primaryCta ? `<td style="padding-right:12px;">
-            <a href="${escapeHtml(primaryCta.href)}" style="display:inline-block;padding:14px 28px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">
-              ${escapeHtml(primaryCta.label)}
-            </a>
-          </td>` : ""}
-          ${secondaryCta ? `<td>
-            <a href="${escapeHtml(secondaryCta.href)}" style="display:inline-block;padding:13px 26px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">
-              ${escapeHtml(secondaryCta.label)}
-            </a>
-          </td>` : ""}
-        </tr>
+        ${ctaPrimary ? `<tr><td style="padding-bottom:10px;">
+          <a href="${escapeHtml(ctaPrimary.href)}" style="display:inline-block;padding:14px 28px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+            ${escapeHtml(ctaPrimary.label)}
+          </a>
+        </td></tr>` : ""}
+        ${ctaSecondary ? `<tr><td>
+          <a href="${escapeHtml(ctaSecondary.href)}" style="display:inline-block;padding:13px 26px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+            ${escapeHtml(ctaSecondary.label)}
+          </a>
+        </td></tr>` : ""}
       </table>`
-    : `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:32px;">
-        <tr>
-          <td style="padding-right:12px;">
-            <a href="${escapeHtml(primaryCta.href)}" style="display:inline-block;padding:14px 28px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">
-              ${escapeHtml(primaryCta.label)}
-            </a>
-          </td>
-          <td>
-            <a href="${escapeHtml(secondaryCta.href)}" style="display:inline-block;padding:13px 26px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">
-              ${escapeHtml(secondaryCta.label)}
-            </a>
-          </td>
-        </tr>
-      </table>`;
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="${isDe ? "de" : "en"}">
@@ -166,9 +134,9 @@ export function renderAppointmentEmail({
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${colors.background};padding:40px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:${colors.card};border:1px solid ${colors.border};">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:${colors.card};border:1px solid ${colors.border};border-radius:${radius};">
           <tr>
-            <td style="padding:40px 40px 28px;text-align:center;border-bottom:1px solid ${colors.border};">
+            <td style="padding:40px 40px 28px;text-align:center;border-bottom:1px solid ${colors.border};border-radius:${radius} ${radius} 0 0;">
               <div style="width:48px;height:1px;background-color:${colors.gold};margin:0 auto 20px;"></div>
               <p style="margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:400;letter-spacing:-0.02em;color:${colors.foreground};line-height:1.2;">
                 ${escapeHtml(siteConfig.name)}
@@ -192,12 +160,19 @@ export function renderAppointmentEmail({
               <p style="margin:0 0 28px;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:${colors.muted};">
                 ${escapeHtml(intro)}
               </p>
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${colors.background};border:1px solid ${colors.border};">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${colors.background};border:1px solid ${colors.border};border-radius:${radius};">
                 <tr>
                   <td style="padding:8px 24px 4px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                       ${detailRows}
-                      ${statusBadge}
+                      ${statusLabel ? `
+                        <tr>
+                          <td colspan="2" style="padding:20px 0 0;">
+                            <span style="display:inline-block;padding:8px 14px;border:1px solid ${statusStyle.border};background:${statusStyle.bg};color:${statusStyle.text};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border-radius:${radius};">
+                              ${escapeHtml(statusLabel)}
+                            </span>
+                          </td>
+                        </tr>` : ""}
                     </table>
                   </td>
                 </tr>
@@ -249,16 +224,22 @@ export function renderAdminBookingEmail({
   const adminActionHtml = `
     <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:28px;width:100%;">
       <tr>
-        <td style="padding:20px;background-color:#f0f7f0;border:1px solid ${colors.greenBorder};text-align:center;">
+        <td style="padding:20px;background-color:#f0f7f0;border:1px solid ${colors.greenBorder};text-align:center;border-radius:${radius};">
           <p style="margin:0 0 16px;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:${colors.foreground};">
             Termin bestätigen oder ablehnen:
           </p>
-          <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:12px 24px;background-color:${colors.green};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;margin-right:8px;">
-            ✓ Im Admin öffnen
-          </a>
-          <a href="${escapeHtml(adminUrl)}" style="display:inline-block;padding:12px 24px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;">
-            Alle Termine
-          </a>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+            <tr><td style="padding-bottom:10px;">
+              <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:12px 24px;background-color:${colors.green};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+                ✓ Im Admin öffnen
+              </a>
+            </td></tr>
+            <tr><td>
+              <a href="${escapeHtml(adminUrl)}" style="display:inline-block;padding:12px 24px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+                Alle Termine
+              </a>
+            </td></tr>
+          </table>
         </td>
       </tr>
     </table>`;
@@ -269,8 +250,6 @@ export function renderAdminBookingEmail({
     headline: "Neue Buchungsanfrage",
     intro: "Eine neue Terminanfrage ist auf Ihrer Website eingegangen.",
     outro: "Bitte bestätigen oder lehnen Sie den Termin in Ihrem Admin-Bereich ab.",
-    statusLabel: "Ausstehend",
-    statusTone: "pending",
     details: [
       { label: "Kunde", value: clientName },
       { label: "Telefon", value: clientPhone || "—" },
@@ -279,9 +258,48 @@ export function renderAdminBookingEmail({
       { label: "Termin", value: startDate },
       { label: "Nachricht", value: notes || "Keine Nachricht" },
     ],
-    ctaPrimary: { label: "Admin öffnen", href: confirmUrl },
-    ctaSecondary: { label: "Alle Termine", href: adminUrl },
     extraHtml: adminActionHtml,
+  });
+}
+
+export function renderBookingRequestEmail({
+  locale,
+  clientName,
+  service,
+  startTime,
+}: {
+  locale: string;
+  clientName: string;
+  service: string;
+  startTime: Date;
+}) {
+  const isDe = locale === "de";
+  const loc = isDe ? "de-DE" : "en-GB";
+
+  const dateStr = startTime.toLocaleDateString(loc, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const timeStr = startTime.toLocaleTimeString(loc, { hour: "2-digit", minute: "2-digit" });
+
+  return renderAppointmentEmail({
+    locale,
+    clientName,
+    headline: isDe ? "Buchungsanfrage erhalten" : "Appointment request received",
+    intro: isDe
+      ? "Vielen Dank für Ihre Buchungsanfrage! Wir haben Ihre Anfrage erhalten und werden sie so schnell wie möglich bearbeiten."
+      : "Thank you for your appointment request! We have received your request and will process it as soon as possible.",
+    outro: isDe
+      ? "Sie erhalten eine Bestätigungs-E-Mail, sobald Ihr Termin bestätigt wurde. Bei Fragen stehen wir Ihnen gerne zur Verfügung."
+      : "You will receive a confirmation email once your appointment has been confirmed. Feel free to contact us if you have any questions.",
+    details: [
+      { label: isDe ? "Leistung" : "Service", value: service },
+      { label: isDe ? "Datum" : "Date", value: dateStr },
+      { label: isDe ? "Uhrzeit" : "Time", value: timeStr },
+      { label: "Status", value: isDe ? "Ausstehend" : "Pending" },
+    ],
   });
 }
 
@@ -320,25 +338,23 @@ export function renderConfirmationEmail({
   const icalUrl = `${siteUrl()}/api/appointments/${appointmentId}/ical`;
 
   const calendarHtml = `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;border:1px solid ${colors.border};background-color:${colors.background};">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;border:1px solid ${colors.border};background-color:${colors.background};border-radius:${radius};">
       <tr>
         <td style="padding:20px 24px;">
           <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.muted};">
             ${isDe ? "Zum Kalender hinzufügen" : "Add to calendar"}
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:10px;">
-            <tr>
-              <td style="padding-right:10px;">
-                <a href="${escapeHtml(googleCalendarUrl)}" target="_blank" style="display:inline-block;padding:10px 20px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;">
-                  Google Calendar
-                </a>
-              </td>
-              <td>
-                <a href="${escapeHtml(icalUrl)}" style="display:inline-block;padding:9px 18px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;">
-                  iCal / Outlook
-                </a>
-              </td>
-            </tr>
+            <tr><td style="padding-bottom:8px;">
+              <a href="${escapeHtml(googleCalendarUrl)}" target="_blank" style="display:inline-block;padding:10px 20px;background-color:${colors.gold};color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+                Google Calendar
+              </a>
+            </td></tr>
+            <tr><td>
+              <a href="${escapeHtml(icalUrl)}" style="display:inline-block;padding:9px 18px;border:1px solid ${colors.foreground};color:${colors.foreground};font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:${radius};">
+                iCal / Outlook
+              </a>
+            </td></tr>
           </table>
           <p style="margin:12px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:${colors.muted};">
             📍 <a href="${siteConfig.googleMapsUrl}" target="_blank" style="color:${colors.gold};text-decoration:none;">${escapeHtml(siteConfig.addressFull)} ${isDe ? "auf Google Maps ansehen" : "— view on Google Maps"}</a>
@@ -363,7 +379,6 @@ export function renderConfirmationEmail({
       { label: isDe ? "Uhrzeit" : "Time", value: timeStr },
       { label: isDe ? "Adresse" : "Address", value: siteConfig.addressFull },
     ],
-    statusLabel: isDe ? "Bestätigt" : "Confirmed",
     statusTone: "confirmed",
     ctaPrimary: { label: isDe ? "Auf Google Maps" : "Google Maps", href: siteConfig.googleMapsUrl },
     ctaSecondary: { label: "WhatsApp", href: siteConfig.whatsappUrl },
@@ -396,7 +411,7 @@ export function renderRejectionEmail({
   const bookingUrl = `${siteUrl()}/${isDe ? "de" : "en"}/booking`;
 
   const reasonHtml = rejectionReason
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;border:1px solid ${colors.redBorder};background-color:${colors.redBg};">
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;border:1px solid ${colors.redBorder};background-color:${colors.redBg};border-radius:${radius};">
         <tr>
           <td style="padding:16px 20px;">
             <p style="margin:0 0 4px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${colors.red};">

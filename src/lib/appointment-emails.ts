@@ -85,8 +85,6 @@ export async function sendBookingRequestEmail(
       { label: isDe ? "Uhrzeit" : "Time", value: timeStr },
       { label: "Status", value: isDe ? "Ausstehend" : "Pending" },
     ],
-    statusLabel: isDe ? "Ausstehend" : "Pending",
-    statusTone: "pending",
   });
 
   return sendEmail({
