@@ -71,6 +71,7 @@ export async function deleteBlogCategory(id: string): Promise<void> {
 
 export async function createBlogPost(formData: FormData): Promise<ActionResult<{ id: string }>> {
   const session = await requireAdmin();
+  const featuredImageUrl = formData.get("featuredImageUrl") as string | null;
   const parsed = blogPostSchema.safeParse({
     slug: formData.get("slug"),
     categoryId: formData.get("categoryId") || undefined,
@@ -100,6 +101,14 @@ export async function createBlogPost(formData: FormData): Promise<ActionResult<{
     slug,
   } = parsed.data;
 
+  let featuredImageId: string | null = null;
+  if (featuredImageUrl) {
+    const media = await prisma.mediaFile.create({
+      data: { url: featuredImageUrl, secureUrl: featuredImageUrl, folder: "blog" },
+    });
+    featuredImageId = media.id;
+  }
+
   const post = await prisma.blogPost.create({
     data: {
       slug,
@@ -108,6 +117,7 @@ export async function createBlogPost(formData: FormData): Promise<ActionResult<{
       status,
       featured: featured ?? false,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
+      featuredImageId,
     },
   });
 
@@ -134,6 +144,7 @@ export async function createBlogPost(formData: FormData): Promise<ActionResult<{
 
 export async function updateBlogPost(id: string, formData: FormData): Promise<ActionResult> {
   const session = await requireAdmin();
+  const featuredImageUrl = formData.get("featuredImageUrl") as string | null;
   const parsed = blogPostSchema.safeParse({
     slug: formData.get("slug"),
     categoryId: formData.get("categoryId") || undefined,
@@ -164,6 +175,14 @@ export async function updateBlogPost(id: string, formData: FormData): Promise<Ac
     slug,
   } = parsed.data;
 
+  let featuredImageId = existing?.featuredImageId ?? null;
+  if (featuredImageUrl) {
+    const media = await prisma.mediaFile.create({
+      data: { url: featuredImageUrl, secureUrl: featuredImageUrl, folder: "blog" },
+    });
+    featuredImageId = media.id;
+  }
+
   await prisma.blogPost.update({
     where: { id },
     data: {
@@ -171,6 +190,7 @@ export async function updateBlogPost(id: string, formData: FormData): Promise<Ac
       categoryId: categoryId || null,
       status,
       featured: featured ?? false,
+      featuredImageId,
       publishedAt:
         status === "PUBLISHED" && !existing?.publishedAt ? new Date() : existing?.publishedAt,
     },

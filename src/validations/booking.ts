@@ -7,7 +7,7 @@ export const bookingSchema = z.object({
   firstName: z.string().min(2).max(50),
   lastName: z.string().min(2).max(50),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(5, "Phone number is required"),
   notes: z.string().max(1000).optional(),
   locale: z.enum(["de", "en"]).default("de"),
 });

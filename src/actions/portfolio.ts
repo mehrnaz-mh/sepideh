@@ -165,8 +165,6 @@ export async function createPortfolioItem(formData: FormData): Promise<ActionRes
   revalidatePath("/admin/portfolio");
   revalidatePath("/de/portfolio");
   revalidatePath("/en/portfolio");
-  revalidatePath(`/de/portfolio/${parsed.data.slug}`);
-  revalidatePath(`/en/portfolio/${parsed.data.slug}`);
   revalidatePath("/de");
   revalidatePath("/en");
   return actionSuccess({ id: item.id });
@@ -222,8 +220,6 @@ export async function updatePortfolioItem(id: string, formData: FormData): Promi
   revalidatePath("/admin/portfolio");
   revalidatePath("/de/portfolio");
   revalidatePath("/en/portfolio");
-  revalidatePath(`/de/portfolio/${parsed.data.slug}`);
-  revalidatePath(`/en/portfolio/${parsed.data.slug}`);
   revalidatePath("/de");
   revalidatePath("/en");
   return actionSuccess();

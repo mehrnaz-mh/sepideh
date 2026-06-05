@@ -47,19 +47,16 @@ export default async function ServiceDetailPage({
 
   return (
     <>
-      <section className="section-padding bg-background-secondary">
+      <section className="section-padding-hero bg-background-secondary">
         <div className="luxury-container">
           <FadeIn>
             <Link href="/services" className="text-sm text-muted transition-colors hover:text-gold">
               ← {t("title")}
             </Link>
-            <h1 className="mt-8 font-serif text-5xl md:text-6xl">
+            <h1 className="mt-6 text-5xl md:text-6xl">
               {service[loc].title}
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-muted">{service[loc].shortDesc}</p>
-            <p className="mt-4 text-xs uppercase tracking-[0.22em] text-muted">
-              <span className="text-gold">{service.durationMinutes}</span> {tc("minutes")}
-            </p>
           </FadeIn>
         </div>
       </section>
@@ -83,13 +80,13 @@ export default async function ServiceDetailPage({
       <section className="section-padding bg-background-secondary">
         <div className="luxury-container">
           <FadeIn>
-            <h2 className="font-serif text-3xl">{t("faqTitle")}</h2>
+            <h2 className="text-3xl">{t("faqTitle")}</h2>
           </FadeIn>
           <div className="mt-8 grid gap-3 md:grid-cols-2">
             {faqItems.slice(0, 4).map((item, i) => (
               <FadeIn key={i} delay={i * 0.05}>
                 <div className="h-full border border-border bg-background p-6">
-                  <h3 className="font-serif text-lg">{item[loc].question}</h3>
+                  <h3 className="text-lg">{item[loc].question}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted">
                     {item[loc].answer}
                   </p>
@@ -104,15 +101,12 @@ export default async function ServiceDetailPage({
         <section className="section-padding">
           <div className="luxury-container">
             <FadeIn>
-              <h2 className="font-serif text-3xl">{t("galleryTitle")}</h2>
+              <h2 className="text-3xl">{t("galleryTitle")}</h2>
             </FadeIn>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {relatedPortfolio.map((item, i) => (
                 <FadeIn key={item.slug} delay={i * 0.08}>
-                  <Link
-                    href={`/portfolio/${item.slug}`}
-                    className="group relative block aspect-[3/4] overflow-hidden"
-                  >
+                  <div className="group relative block aspect-[3/4] overflow-hidden">
                     <Image
                       src={item.image}
                       alt={item[loc].altText}
@@ -121,7 +115,7 @@ export default async function ServiceDetailPage({
                       sizes="33vw"
                       unoptimized={item.image.startsWith("http")}
                     />
-                  </Link>
+                  </div>
                 </FadeIn>
               ))}
             </div>

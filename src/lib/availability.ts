@@ -71,14 +71,18 @@ export async function getAvailableSlots(
   });
 
   const slots: string[] = [];
-  const totalDuration = serviceDuration + bufferMinutes;
+  // Minimum 2-hour gap between appointments
+  const effectiveBuffer = Math.max(bufferMinutes, 120);
+  const totalDuration = serviceDuration + effectiveBuffer;
 
   for (const rule of rules) {
     let current = parseTime(date, rule.startTime);
+    // Round up to next full hour
+    const mins = current.getMinutes();
+    if (mins !== 0) current = addMinutes(current, 60 - mins);
     const end = parseTime(date, rule.endTime);
 
-    while (addMinutes(current, totalDuration) <= end) {
-      const slotEnd = addMinutes(current, serviceDuration);
+    while (current <= end) {
       const slotWithBuffer = addMinutes(current, totalDuration);
 
       const blocked = blockedDates.some((b) => {
@@ -90,7 +94,7 @@ export async function getAvailableSlots(
       });
 
       const hasConflict = appointments.some((apt) => {
-        const aptEndWithBuffer = addMinutes(apt.endTime, bufferMinutes);
+        const aptEndWithBuffer = addMinutes(apt.endTime, effectiveBuffer);
         return current < aptEndWithBuffer && slotWithBuffer > apt.startTime;
       });
 
@@ -100,7 +104,7 @@ export async function getAvailableSlots(
         slots.push(format(current, "HH:mm"));
       }
 
-      current = addMinutes(current, 30);
+      current = addMinutes(current, 120);
     }
   }
 

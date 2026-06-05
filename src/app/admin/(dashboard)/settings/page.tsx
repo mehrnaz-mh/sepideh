@@ -40,20 +40,23 @@ export default async function AdminSettingsPage() {
 
   async function saveSettingsAction(formData: FormData) {
     "use server";
-    await updateSettings(formData);
-    redirect("/admin/settings");
+    const result = await updateSettings(formData);
+    if (!result.success) redirect(`/admin/settings?error=${encodeURIComponent(result.error ?? "1")}`);
+    redirect("/admin/settings?success=updated");
   }
 
   async function addRuleAction(formData: FormData) {
     "use server";
-    await createAvailabilityRule(formData);
-    redirect("/admin/settings");
+    const result = await createAvailabilityRule(formData);
+    if (!result.success) redirect(`/admin/settings?error=${encodeURIComponent(result.error ?? "time_format")}`);
+    redirect("/admin/settings?success=created");
   }
 
   async function addBlockedAction(formData: FormData) {
     "use server";
-    await createBlockedDate(formData);
-    redirect("/admin/settings");
+    const result = await createBlockedDate(formData);
+    if (!result.success) redirect(`/admin/settings?error=${encodeURIComponent(result.error ?? "1")}`);
+    redirect("/admin/settings?success=created");
   }
 
   return (
@@ -92,8 +95,8 @@ export default async function AdminSettingsPage() {
                 "SUNDAY",
               ].map((d) => ({ value: d, label: d }))}
             />
-            <FormField label="Start" name="startTime" defaultValue="10:00" required placeholder="10:00" />
-            <FormField label="End" name="endTime" defaultValue="19:00" required placeholder="19:00" />
+            <FormField label="Start Time" name="startTime" defaultValue="10:00" required placeholder="10:00" hint='Format: HH:MM — e.g. "10:00"' />
+            <FormField label="End Time" name="endTime" defaultValue="19:00" required placeholder="19:00" hint='Format: HH:MM — e.g. "18:00"' />
             <CheckboxField label="Active" name="isActive" defaultChecked />
           </div>
           <div className="mt-4">

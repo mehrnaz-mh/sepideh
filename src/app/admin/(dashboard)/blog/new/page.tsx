@@ -7,6 +7,7 @@ import {
   SelectField,
   TextAreaField,
 } from "@/components/admin/forms/fields";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { createBlogPost } from "@/actions/blog";
 import { getBlogCategories } from "@/actions/blog";
 
@@ -17,11 +18,15 @@ export default async function NewBlogPostPage() {
     "use server";
     const result = await createBlogPost(formData);
     if (!result.success) redirect("/admin/blog/new?error=1");
-    redirect("/admin/blog");
+    redirect("/admin/blog?success=created");
   }
 
   return (
     <AdminFormShell title="New Blog Post" backHref="/admin/blog" action={action} submitLabel="Create">
+      <div className="border border-border bg-background p-6">
+        <h3 className="mb-4 font-serif text-lg">Cover Image</h3>
+        <ImageUploadField name="featuredImageUrl" label="Wide cover image (recommended: 1200×630)" folder="blog" />
+      </div>
       <FormSection title="Post Settings">
         <FormField label="Slug" name="slug" required />
         <SelectField

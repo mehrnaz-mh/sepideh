@@ -14,7 +14,7 @@ export default function NewClientPage() {
     "use server";
     const result = await createClient(formData);
     if (!result.success) redirect(`/admin/clients/new?error=${encodeURIComponent(result.error)}`);
-    redirect("/admin/clients");
+    redirect("/admin/clients?success=created");
   }
 
   return (

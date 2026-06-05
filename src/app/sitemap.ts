@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { siteConfig, services } from "@/data/content";
-import { getPublicPortfolioItems } from "@/lib/portfolio-public";
 import { prisma } from "@/lib/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -37,21 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   }
 
-  try {
-    const portfolioItems = await getPublicPortfolioItems();
-    for (const item of portfolioItems) {
-      for (const locale of siteConfig.locales) {
-        entries.push({
-          url: `${baseUrl}/${locale}/portfolio/${item.slug}`,
-          lastModified: new Date(),
-          changeFrequency: "monthly",
-          priority: 0.6,
-        });
-      }
-    }
-  } catch {
-    // portfolio URLs omitted if DB unavailable
-  }
 
   try {
     const posts = await prisma.blogPost.findMany({

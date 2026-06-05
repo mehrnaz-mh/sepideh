@@ -32,7 +32,7 @@ export default async function EditPortfolioItemPage({
     "use server";
     const result = await updatePortfolioItem(id, formData);
     if (!result.success) redirect(`/admin/portfolio/${id}/edit?error=1`);
-    redirect("/admin/portfolio");
+    redirect("/admin/portfolio?success=updated");
   }
 
   return (

@@ -75,13 +75,13 @@ export default async function BlogPostPage({
         ])}
       />
 
-      <article className="section-padding">
+      <article className="section-padding-hero">
         <div className="luxury-container max-w-3xl">
           <FadeIn>
             <Link href="/blog" className="text-sm text-muted hover:text-gold">
               ← Blog
             </Link>
-            <h1 className="mt-6 font-serif text-5xl">{translation.title}</h1>
+            <h1 className="mt-6 text-5xl">{translation.title}</h1>
             {translation.excerpt && (
               <p className="mt-4 text-xl text-muted">{translation.excerpt}</p>
             )}

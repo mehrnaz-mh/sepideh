@@ -1,4 +1,4 @@
-import { siteConfig, siteImages } from "@/data/content";
+import { siteConfig } from "@/data/content";
 
 interface JsonLdProps {
   data: Record<string, unknown> | Record<string, unknown>[];
@@ -13,26 +13,38 @@ export function JsonLd({ data }: JsonLdProps) {
   );
 }
 
+function siteUrl() {
+  return (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+}
+
 export function localBusinessSchema(locale: string) {
+  const url = siteUrl();
   return {
     "@context": "https://schema.org",
-    "@type": "BeautySalon",
-    name: siteConfig.name,
+    "@type": "LocalBusiness",
+    name: `${siteConfig.name} — Luxury Hair & Makeup`,
     description:
       locale === "de"
         ? "Professionelle Hairstylistin und Make-up-Artistin in Hamburg"
         : "Professional hair stylist and makeup artist in Hamburg",
-    url: process.env.NEXT_PUBLIC_SITE_URL,
-    telephone: siteConfig.phone,
+    url: `${url}/${locale}`,
+    telephone: siteConfig.phoneTel,
     email: siteConfig.email,
     address: {
       "@type": "PostalAddress",
+      streetAddress: siteConfig.street,
+      postalCode: siteConfig.postalCode,
       addressLocality: siteConfig.city,
       addressCountry: siteConfig.country,
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: siteConfig.latitude,
+      longitude: siteConfig.longitude,
+    },
+    image: `${url}/og-image.jpg`,
+    priceRange: "€€",
     sameAs: [siteConfig.instagram],
-    priceRange: "€€€",
-    image: `${process.env.NEXT_PUBLIC_SITE_URL}${siteImages.hero}`,
   };
 }
 
@@ -47,6 +59,8 @@ export function personSchema(locale: string) {
         : "Professional Hair Stylist & Makeup Artist",
     address: {
       "@type": "PostalAddress",
+      streetAddress: siteConfig.street,
+      postalCode: siteConfig.postalCode,
       addressLocality: siteConfig.city,
       addressCountry: siteConfig.country,
     },

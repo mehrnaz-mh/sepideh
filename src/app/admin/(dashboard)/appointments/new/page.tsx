@@ -24,7 +24,7 @@ export default async function NewAppointmentPage() {
     "use server";
     const result = await createAppointment(formData);
     if (!result.success) redirect(`/admin/appointments/new?error=${encodeURIComponent(result.error)}`);
-    redirect("/admin/appointments");
+    redirect("/admin/appointments?success=created");
   }
 
   return (
