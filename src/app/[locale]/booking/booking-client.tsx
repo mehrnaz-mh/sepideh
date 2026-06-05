@@ -333,7 +333,7 @@ export default function BookingPage() {
                               isSelected
                                 ? "border border-gold bg-gold text-white"
                                 : isAvailable && !isPast
-                                  ? "border border-gold/40 bg-background hover:border-gold"
+                                  ? "border border-gold/40 bg-background-secondary hover:border-gold"
                                   : "cursor-not-allowed text-muted opacity-30"
                             }`}
                           >
