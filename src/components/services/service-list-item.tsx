@@ -81,7 +81,7 @@ export function ServiceListItem({
           </Link>
           <Link
             href={`/booking?service=${service.slug}`}
-            className="inline-flex items-center justify-center border border-foreground px-6 py-3 text-xs uppercase tracking-[0.2em] transition-colors hover:border-gold hover:bg-gold hover:text-white"
+            className="inline-flex items-center justify-center border border-foreground px-6 py-3 text-xs uppercase tracking-[0.2em] transition-colors hover:border-gold hover:bg-gold hover:text-white rounded-lg"
           >
             {bookLabel}
           </Link>
