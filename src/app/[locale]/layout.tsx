@@ -20,6 +20,8 @@ export async function generateMetadata({
   const { locale } = await params;
   const isDe = locale === "de";
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
   return {
     title: {
       default: isDe
@@ -28,22 +30,32 @@ export async function generateMetadata({
       template: "%s | Sepideh Mihanparast",
     },
     description: isDe
-      ? "Professionelle Hairstylistin und Make-up-Artistin in Hamburg. Bridal Styling, Red Carpet, Editorial & Event Beauty."
-      : "Professional hair stylist and makeup artist in Hamburg. Bridal styling, red carpet, editorial & event beauty.",
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    ),
+      ? "Professionelle Hairstylistin & Makeup-Artist in Hamburg. Braut-Styling, Red Carpet, Editorial & Event Beauty von Sepideh Mihanparast."
+      : "Professional hair stylist & makeup artist in Hamburg. Bridal styling, red carpet, editorial & event beauty by Sepideh Mihanparast.",
+    metadataBase: new URL(siteUrl),
     alternates: {
-      canonical: `/${locale}`,
+      canonical: `${siteUrl}/${locale}`,
       languages: {
-        de: "/de",
-        en: "/en",
+        de: `${siteUrl}/de`,
+        en: `${siteUrl}/en`,
       },
     },
     openGraph: {
       type: "website",
       locale: isDe ? "de_DE" : "en_GB",
       siteName: "Sepideh Mihanparast",
+      images: [
+        {
+          url: `${siteUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: "Sepideh Mihanparast — Luxury Hair & Makeup Hamburg",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`${siteUrl}/og-image.jpg`],
     },
   };
 }

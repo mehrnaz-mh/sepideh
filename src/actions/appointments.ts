@@ -158,3 +158,62 @@ export async function updateAppointmentStatus(
     }
   });
 }
+
+export async function confirmAppointment(appointmentId: string): Promise<void> {
+  const session = await requireAdmin();
+
+  const existing = await prisma.appointment.findUnique({
+    where: { id: appointmentId },
+    select: { status: true },
+  });
+  if (!existing || existing.status === "CONFIRMED") return;
+
+  const appointment = await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: { status: "CONFIRMED", confirmedAt: new Date() },
+    include: appointmentInclude,
+  });
+
+  await logAudit(session.user.id, "CONFIRM", "Appointment", appointmentId);
+  revalidatePath("/admin/appointments");
+  revalidatePath("/admin/calendar");
+
+  void notifyAppointmentStatusChange(appointment, existing.status).then((email) => {
+    if (!email.ok) {
+      console.error("[Email] Confirm notification failed:", email.error);
+    }
+  });
+}
+
+export async function rejectAppointment(
+  appointmentId: string,
+  rejectionReason?: string,
+): Promise<void> {
+  const session = await requireAdmin();
+
+  const existing = await prisma.appointment.findUnique({
+    where: { id: appointmentId },
+    select: { status: true },
+  });
+  if (!existing || existing.status === "CANCELLED") return;
+
+  const appointment = await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: {
+      status: "CANCELLED",
+      rejectedAt: new Date(),
+      rejectionReason: rejectionReason ?? null,
+    },
+    include: appointmentInclude,
+  });
+
+  await logAudit(session.user.id, "REJECT", "Appointment", appointmentId, { rejectionReason });
+  revalidatePath("/admin/appointments");
+  revalidatePath("/admin/calendar");
+
+  void notifyAppointmentStatusChange(appointment, existing.status, rejectionReason).then((email) => {
+    if (!email.ok) {
+      console.error("[Email] Rejection notification failed:", email.error);
+    }
+  });
+}

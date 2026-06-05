@@ -1,6 +1,8 @@
 import { AdminSidebar } from "@/components/admin/sidebar";
+import { ToastNotification } from "@/components/admin/toast-notification";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function AdminDashboardLayout({
   children,
@@ -38,6 +40,9 @@ export default async function AdminDashboardLayout({
         </header>
         <main className="p-8">{children}</main>
       </div>
+      <Suspense>
+        <ToastNotification />
+      </Suspense>
     </div>
   );
 }

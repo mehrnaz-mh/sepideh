@@ -1,7 +1,9 @@
+import React from "react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
+import { Crown, Wand2, Scissors, Sparkles, Camera, Star, Drama, Waves, Gem } from "lucide-react";
 import { FadeIn } from "@/components/motion/fade-in";
 import { TextReveal } from "@/components/motion/text-reveal";
 import {
@@ -19,7 +21,6 @@ import {
   testimonials,
 } from "@/data/content";
 import { getPublicPortfolioItems } from "@/lib/portfolio-public";
-import type { PublicPortfolioItem } from "@/lib/portfolio-public";
 import type { Locale } from "@/data/content";
 import { ArrowRight, Quote } from "lucide-react";
 
@@ -37,13 +38,6 @@ export default async function HomePage({
   const portfolioItems = await getPublicPortfolioItems();
   const featuredPortfolio = portfolioItems.filter((p) => p.featured).slice(0, 6);
   const featuredServices = services.slice(0, 6);
-  const bridalItems = portfolioItems.filter((p) => p.categorySlug === "bridal");
-  const cannesItems = portfolioItems.filter(
-    (p) => p.categorySlug === "cannes-red-carpet",
-  );
-  const editorialItems = portfolioItems.filter(
-    (p) => p.categorySlug === "editorial",
-  );
 
   const faqData = faqItems.map((item) => ({
     question: item[loc].question,
@@ -54,8 +48,8 @@ export default async function HomePage({
     <>
       <JsonLd data={[localBusinessSchema(locale), personSchema(locale), faqSchema(faqData)]} />
 
-      {/* Hero — mobile: image then copy; lg+: 50/50 split, clean photo (no overlay) */}
-      <section className="flex flex-col bg-background-secondary lg:grid lg:min-h-[calc(100svh-5rem)] lg:grid-cols-2">
+      {/* Hero — mobile: image then copy; lg+: 50/50 split */}
+      <section className="flex flex-col bg-background-secondary lg:grid lg:min-h-[calc(100svh-5rem)] lg:grid-cols-2 overflow-hidden">
         <div className="relative order-1 aspect-[3/4] w-full sm:aspect-[4/5] lg:order-2 lg:aspect-auto lg:min-h-[calc(100svh-5rem)]">
           <Image
             src={siteImages.hero}
@@ -65,6 +59,8 @@ export default async function HomePage({
             className="object-cover object-[42%_22%] sm:object-[40%_20%] lg:object-[38%_center]"
             sizes="(max-width: 1023px) 100vw, 50vw"
           />
+          {/* Fade left edge — extends past column boundary */}
+          <div className="absolute inset-y-0 -left-16 w-1/2 bg-gradient-to-r from-background-secondary from-30% to-transparent" />
         </div>
 
         <div className="order-2 flex flex-col justify-center px-6 py-12 sm:px-10 sm:py-14 lg:order-1 lg:px-12 lg:py-16 xl:px-16 xl:py-20 2xl:px-20">
@@ -76,7 +72,7 @@ export default async function HomePage({
             </FadeIn>
             <TextReveal
               as="h1"
-              className="mt-5 font-serif text-[2.5rem] leading-[1.08] sm:text-5xl lg:mt-6 lg:text-[3.25rem] xl:text-6xl"
+              className="mt-5 text-[2.5rem] leading-[1.08] sm:text-5xl lg:mt-6 lg:text-[3.25rem] xl:text-6xl"
             >
               {t("heroTitle")}
             </TextReveal>
@@ -108,7 +104,7 @@ export default async function HomePage({
       <section className="section-padding">
         <div className="luxury-container grid items-center gap-16 lg:grid-cols-2">
           <FadeIn>
-            <div className="relative aspect-[4/5] overflow-hidden bg-background-secondary">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[5px] bg-background-secondary">
               <Image
                 src={siteImages.aboutPreview}
                 alt={siteConfig.name}
@@ -121,7 +117,7 @@ export default async function HomePage({
           <div>
             <FadeIn>
               <div className="gold-line mb-6" />
-              <h2 className="font-serif text-4xl md:text-5xl">{t("aboutPreviewTitle")}</h2>
+              <h2 className="text-4xl md:text-5xl">{t("aboutPreviewTitle")}</h2>
             </FadeIn>
             <FadeIn delay={0.1}>
               <p className="mt-6 text-lg leading-relaxed text-muted">
@@ -147,8 +143,21 @@ export default async function HomePage({
         <div className="luxury-container">
           <FadeIn className="text-center">
             <div className="gold-line mx-auto mb-6" />
-            <h2 className="font-serif text-4xl md:text-5xl">{t("servicesTitle")}</h2>
+            <h2 className="text-4xl md:text-5xl">{t("servicesTitle")}</h2>
           </FadeIn>
+          {(() => {
+            const serviceIcons: Record<string, React.ReactNode> = {
+              "bridal-hair": <Crown size={20} className="text-gold shrink-0" />,
+              "bridal-makeup": <Wand2 size={20} className="text-gold shrink-0" />,
+              "hair-styling": <Scissors size={20} className="text-gold shrink-0" />,
+              "makeup": <Sparkles size={20} className="text-gold shrink-0" />,
+              "editorial-styling": <Camera size={20} className="text-gold shrink-0" />,
+              "fashion-styling": <Star size={20} className="text-gold shrink-0" />,
+              "red-carpet": <Drama size={20} className="text-gold shrink-0" />,
+              "event-styling": <Gem size={20} className="text-gold shrink-0" />,
+              "hair-extensions": <Waves size={20} className="text-gold shrink-0" />,
+            };
+            return (
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {featuredServices.map((service, i) => (
               <FadeIn key={service.slug} delay={i * 0.08}>
@@ -156,17 +165,24 @@ export default async function HomePage({
                   href={`/services/${service.slug}`}
                   className="group block border border-border bg-background p-8 transition-all duration-300 hover:border-gold"
                 >
-                  <h3 className="font-serif text-2xl transition-colors group-hover:text-gold">
-                    {service[loc].title}
-                  </h3>
+                  <div className="flex items-center gap-3">
+                    {serviceIcons[service.slug] ?? <Sparkles size={20} className="text-gold shrink-0" />}
+                    <h3 className="text-2xl transition-colors group-hover:text-gold">
+                      {service[loc].title}
+                    </h3>
+                  </div>
                   <p className="mt-3 text-sm text-muted">{service[loc].shortDesc}</p>
                 </Link>
               </FadeIn>
             ))}
           </div>
+            );
+          })()}
           <FadeIn className="mt-12 text-center">
             <Button asChild variant="outline">
-              <Link href="/services">{tc("viewAll")}</Link>
+              <Link href="/services">
+                {loc === "de" ? "Alle 11 Leistungen ansehen →" : "View All 11 Services →"}
+              </Link>
             </Button>
           </FadeIn>
         </div>
@@ -178,7 +194,7 @@ export default async function HomePage({
           <FadeIn className="flex items-end justify-between">
             <div>
               <div className="gold-line mb-6" />
-              <h2 className="font-serif text-4xl md:text-5xl">{t("portfolioTitle")}</h2>
+              <h2 className="text-4xl md:text-5xl">{t("portfolioTitle")}</h2>
             </div>
             <Button asChild variant="link" className="hidden md:inline-flex">
               <Link href="/portfolio">{tc("viewAll")}</Link>
@@ -187,7 +203,7 @@ export default async function HomePage({
           <div className="mt-12 columns-1 gap-4 sm:columns-2 lg:columns-3">
             {featuredPortfolio.map((item, i) => (
               <FadeIn key={item.slug} delay={i * 0.05} className="mb-4 break-inside-avoid">
-                <Link href={`/portfolio/${item.slug}`} className="group relative block overflow-hidden">
+                <Link href="/portfolio" className="group relative block overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item[loc].altText}
@@ -196,7 +212,7 @@ export default async function HomePage({
                     className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <span className="font-serif text-xl text-white">{item[loc].title}</span>
+                    <span className="text-xl text-white">{item[loc].title}</span>
                   </div>
                 </Link>
               </FadeIn>
@@ -205,31 +221,12 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Bridal Showcase */}
-      <ShowcaseSection
-        title={t("bridalTitle")}
-        items={bridalItems}
-        locale={loc}
-        bgClass="bg-background-secondary"
-      />
-
-      {/* Cannes */}
-      <ShowcaseSection title={t("cannesTitle")} items={cannesItems} locale={loc} />
-
-      {/* Editorial */}
-      <ShowcaseSection
-        title={t("editorialTitle")}
-        items={editorialItems}
-        locale={loc}
-        bgClass="bg-background-secondary"
-      />
-
       {/* Testimonials */}
       <section className="section-padding">
         <div className="luxury-container">
           <FadeIn className="text-center">
             <div className="gold-line mx-auto mb-6" />
-            <h2 className="font-serif text-4xl md:text-5xl">{t("testimonialsTitle")}</h2>
+            <h2 className="text-4xl md:text-5xl">{t("testimonialsTitle")}</h2>
           </FadeIn>
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {testimonials.map((item, i) => (
@@ -237,7 +234,7 @@ export default async function HomePage({
                 <div className="border border-border p-8">
                   <Quote className="text-gold" size={24} />
                   <p className="mt-4 leading-relaxed text-muted">{item[loc].content}</p>
-                  <p className="mt-6 font-serif text-lg">— {item.clientName}</p>
+                  <p className="mt-6 text-lg">— {item.clientName}</p>
                 </div>
               </FadeIn>
             ))}
@@ -249,7 +246,7 @@ export default async function HomePage({
       <section className="section-padding bg-foreground text-background">
         <div className="luxury-container text-center">
           <FadeIn>
-            <h2 className="font-serif text-4xl md:text-5xl">{t("instagramTitle")}</h2>
+            <h2 className="text-4xl md:text-5xl">{t("instagramTitle")}</h2>
             <p className="mt-4 text-background/70">{siteConfig.instagramHandle}</p>
             <Button asChild variant="outline" className="mt-8 border-background text-background hover:bg-background hover:text-foreground">
               <a href={siteConfig.instagram} target="_blank" rel="noopener noreferrer">
@@ -265,13 +262,13 @@ export default async function HomePage({
         <div className="luxury-container max-w-3xl">
           <FadeIn className="text-center">
             <div className="gold-line mx-auto mb-6" />
-            <h2 className="font-serif text-4xl md:text-5xl">{t("faqTitle")}</h2>
+            <h2 className="text-4xl md:text-5xl">{t("faqTitle")}</h2>
           </FadeIn>
           <div className="mt-12 space-y-6">
             {faqItems.map((item, i) => (
               <FadeIn key={i} delay={i * 0.05}>
                 <details className="group border border-border bg-background p-6">
-                  <summary className="cursor-pointer list-none font-serif text-lg">
+                  <summary className="cursor-pointer list-none text-lg">
                     {item[loc].question}
                   </summary>
                   <p className="mt-4 text-muted">{item[loc].answer}</p>
@@ -287,7 +284,7 @@ export default async function HomePage({
         <div className="luxury-container text-center">
           <FadeIn>
             <div className="gold-line mx-auto mb-6" />
-            <h2 className="font-serif text-4xl md:text-5xl">{t("ctaTitle")}</h2>
+            <h2 className="text-4xl md:text-5xl">{t("ctaTitle")}</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted">{t("ctaDescription")}</p>
             <Button asChild variant="gold" className="mt-10">
               <Link href="/booking">{tc("bookNow")}</Link>
@@ -299,48 +296,3 @@ export default async function HomePage({
   );
 }
 
-function ShowcaseSection({
-  title,
-  items,
-  locale,
-  bgClass = "",
-}: {
-  title: string;
-  items: PublicPortfolioItem[];
-  locale: Locale;
-  bgClass?: string;
-}) {
-  if (items.length === 0) return null;
-
-  return (
-    <section className={`section-padding ${bgClass}`}>
-      <div className="luxury-container">
-        <FadeIn>
-          <div className="gold-line mb-6" />
-          <h2 className="font-serif text-4xl md:text-5xl">{title}</h2>
-        </FadeIn>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {items.slice(0, 3).map((item, i) => (
-            <FadeIn key={item.slug} delay={i * 0.1}>
-              <Link href={`/portfolio/${item.slug}`} className="group block">
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item[locale].altText}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                <h3 className="mt-4 font-serif text-xl">{item[locale].title}</h3>
-                <p className="mt-2 text-sm text-muted line-clamp-2">
-                  {item[locale].description}
-                </p>
-              </Link>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}

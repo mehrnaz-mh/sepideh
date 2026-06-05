@@ -22,7 +22,7 @@ export default async function EditClientPage({
     "use server";
     const result = await updateClient(id, formData);
     if (!result.success) redirect(`/admin/clients/${id}/edit?error=${encodeURIComponent(result.error)}`);
-    redirect("/admin/clients");
+    redirect("/admin/clients?success=updated");
   }
 
   return (

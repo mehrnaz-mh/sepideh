@@ -4,6 +4,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { Link, usePathname } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -38,13 +39,22 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-md">
       <div className="luxury-container flex h-20 items-center justify-between">
-        <Link href="/" className="group flex flex-col" onClick={() => setMobileOpen(false)}>
-          <span className="font-serif text-xl tracking-wide md:text-2xl">
-            {siteConfig.name.split(" ")[0]}
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted transition-colors group-hover:text-gold">
-            Beauty Artist
-          </span>
+        <Link href="/" className="group flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+          <Image
+            src="/sepide/logo.png"
+            alt={siteConfig.name}
+            width={40}
+            height={40}
+            className="h-10 w-auto object-contain"
+          />
+          <div className="flex flex-col">
+            <span className="text-xl tracking-wide text-muted md:text-2xl">
+              {siteConfig.name.split(" ")[0]}
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-muted transition-colors group-hover:text-gold">
+              Beauty Artist
+            </span>
+          </div>
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
@@ -64,7 +74,7 @@ export function Header() {
 
         <div className="hidden items-center gap-4 lg:flex">
           <LocaleSwitcher currentLocale={locale} />
-          <Button asChild variant="gold" size="sm">
+          <Button asChild variant="gold">
             <Link href="/booking">{t("booking")}</Link>
           </Button>
         </div>

@@ -13,7 +13,7 @@ export default function NewServicePage() {
     "use server";
     const result = await createService(formData);
     if (!result.success) redirect(`/admin/services/new?error=${encodeURIComponent(result.error)}`);
-    redirect("/admin/services");
+    redirect("/admin/services?success=created");
   }
 
   return (

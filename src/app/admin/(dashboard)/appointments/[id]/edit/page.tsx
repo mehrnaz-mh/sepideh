@@ -32,7 +32,7 @@ export default async function EditAppointmentPage({
     "use server";
     const result = await updateAppointment(id, formData);
     if (!result.success) redirect(`/admin/appointments/${id}/edit?error=${encodeURIComponent(result.error)}`);
-    redirect("/admin/appointments");
+    redirect("/admin/appointments?success=updated");
   }
 
   return (

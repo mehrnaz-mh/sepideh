@@ -7,7 +7,9 @@ import {
   SelectField,
   TextAreaField,
 } from "@/components/admin/forms/fields";
+import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { getBlogPost, updateBlogPost, getBlogCategories } from "@/actions/blog";
+import { prisma } from "@/lib/prisma";
 
 export default async function EditBlogPostPage({
   params,
@@ -15,7 +17,11 @@ export default async function EditBlogPostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [post, categories] = await Promise.all([getBlogPost(id), getBlogCategories()]);
+  const [post, categories, fullPost] = await Promise.all([
+    getBlogPost(id),
+    getBlogCategories(),
+    prisma.blogPost.findUnique({ where: { id }, include: { featuredImage: true } }),
+  ]);
   if (!post) notFound();
 
   const de = post.translations.find((t) => t.locale === "de");
@@ -25,11 +31,15 @@ export default async function EditBlogPostPage({
     "use server";
     const result = await updateBlogPost(id, formData);
     if (!result.success) redirect(`/admin/blog/${id}/edit?error=1`);
-    redirect("/admin/blog");
+    redirect("/admin/blog?success=updated");
   }
 
   return (
     <AdminFormShell title="Edit Blog Post" backHref="/admin/blog" action={action}>
+      <div className="border border-border bg-background p-6">
+        <h3 className="mb-4 font-serif text-lg">Cover Image</h3>
+        <ImageUploadField name="featuredImageUrl" label="Wide cover image (recommended: 1200×630)" folder="blog" defaultValue={fullPost?.featuredImage?.url ?? ""} />
+      </div>
       <FormSection title="Post Settings">
         <FormField label="Slug" name="slug" defaultValue={post.slug} required />
         <SelectField

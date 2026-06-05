@@ -21,8 +21,8 @@ export default async function EditAvailabilityRulePage({
   async function action(formData: FormData) {
     "use server";
     const result = await updateAvailabilityRule(id, formData);
-    if (!result.success) redirect(`/admin/settings/availability/${id}/edit?error=1`);
-    redirect("/admin/settings");
+    if (!result.success) redirect(`/admin/settings/availability/${id}/edit?error=time_format`);
+    redirect("/admin/settings?success=updated");
   }
 
   return (
@@ -43,8 +43,8 @@ export default async function EditAvailabilityRulePage({
             "SUNDAY",
           ].map((d) => ({ value: d, label: d }))}
         />
-        <FormField label="Start" name="startTime" defaultValue={rule.startTime} required />
-        <FormField label="End" name="endTime" defaultValue={rule.endTime} required />
+        <FormField label="Start Time" name="startTime" defaultValue={rule.startTime} required placeholder="10:00" hint='Format: HH:MM — e.g. "10:00"' />
+        <FormField label="End Time" name="endTime" defaultValue={rule.endTime} required placeholder="19:00" hint='Format: HH:MM — e.g. "18:00"' />
         <CheckboxField label="Active" name="isActive" defaultChecked={rule.isActive} />
       </FormSection>
     </AdminFormShell>

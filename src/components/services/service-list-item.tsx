@@ -1,6 +1,21 @@
+import React from "react";
 import { Link } from "@/i18n/routing";
 import type { Locale } from "@/data/content";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Crown, Wand2, Scissors, Sparkles, Camera, Star, Drama, Waves, Gem, MessageSquare } from "lucide-react";
+
+const serviceIcons: Record<string, React.ReactNode> = {
+  "bridal-hair": <Crown size={24} className="text-gold" />,
+  "bridal-makeup": <Wand2 size={24} className="text-gold" />,
+  "hair-styling": <Scissors size={24} className="text-gold" />,
+  "makeup": <Sparkles size={24} className="text-gold" />,
+  "editorial-styling": <Camera size={24} className="text-gold" />,
+  "fashion-styling": <Star size={24} className="text-gold" />,
+  "red-carpet": <Drama size={24} className="text-gold" />,
+  "event-styling": <Gem size={24} className="text-gold" />,
+  "hair-extensions": <Waves size={24} className="text-gold" />,
+  "vip-services": <Gem size={24} className="text-gold" />,
+  "consultation": <MessageSquare size={24} className="text-gold" />,
+};
 
 type ServiceItem = (typeof import("@/data/content").services)[number];
 
@@ -24,11 +39,11 @@ export function ServiceListItem({
   return (
     <article
       id={service.slug}
-      className="group relative scroll-mt-28 border-b border-border py-14 last:border-b-0 md:py-16"
+      className="group relative scroll-mt-28 border-b border-border py-8 last:border-b-0 last:pb-0 md:py-10"
     >
       <div className="grid gap-8 md:grid-cols-[3.5rem_1fr] md:gap-10 lg:grid-cols-[4rem_1fr_auto] lg:gap-12">
         <span
-          className="font-serif text-3xl text-gold/30 transition-colors group-hover:text-gold/60 md:text-4xl"
+          className="text-3xl text-gold/30 transition-colors group-hover:text-gold/60 md:text-4xl"
           aria-hidden
         >
           {number}
@@ -36,19 +51,15 @@ export function ServiceListItem({
 
         <div className="min-w-0">
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-5">
-            <h2 className="font-serif text-3xl leading-tight md:text-4xl">
+            <h2 className="text-3xl leading-tight md:text-4xl">
               <Link
                 href={`/services/${service.slug}`}
-                className="transition-colors hover:text-gold"
+                className="inline-flex items-center gap-3 transition-colors hover:text-gold"
               >
+                {serviceIcons[service.slug] ?? <Sparkles size={24} className="text-gold shrink-0" />}
                 {service[locale].title}
               </Link>
             </h2>
-            <p className="text-xs uppercase tracking-[0.22em] text-muted">
-              <span className="text-gold/80">{service.durationMinutes}</span>
-              {" "}
-              {minutesLabel}
-            </p>
           </div>
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted md:text-lg">

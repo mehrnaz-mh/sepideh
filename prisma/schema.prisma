@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -158,21 +159,24 @@ model ServiceFaq {
 }
 
 model Appointment {
-  id            String            @id @default(cuid())
-  clientId      String
-  serviceId     String
-  assignedToId  String?
-  startTime     DateTime
-  endTime       DateTime
-  status        AppointmentStatus @default(PENDING)
-  notes         String?           @db.Text
-  internalNotes String?           @db.Text
-  googleEventId String?
-  icsSent       Boolean           @default(false)
-  reminderSent  Boolean           @default(false)
-  locale        String            @default("de")
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  id              String            @id @default(cuid())
+  clientId        String
+  serviceId       String
+  assignedToId    String?
+  startTime       DateTime
+  endTime         DateTime
+  status          AppointmentStatus @default(PENDING)
+  notes           String?           @db.Text
+  internalNotes   String?           @db.Text
+  rejectionReason String?           @db.Text
+  confirmedAt     DateTime?
+  rejectedAt      DateTime?
+  googleEventId   String?
+  icsSent         Boolean           @default(false)
+  reminderSent    Boolean           @default(false)
+  locale          String            @default("de")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   client     Client  @relation(fields: [clientId], references: [id])
   service    Service @relation(fields: [serviceId], references: [id])

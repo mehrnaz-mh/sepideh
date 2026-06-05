@@ -46,7 +46,7 @@ export default async function BookingConfirmPage({
               <Check className="text-gold" size={32} />
             )}
           </div>
-          <h1 className="mt-8 font-serif text-4xl">{t("pendingTitle")}</h1>
+          <h1 className="mt-8 text-4xl">{t("pendingTitle")}</h1>
           {emailFailed || emailNotConfigured ? (
             <div className="mt-4 space-y-3 text-left text-sm">
               <p className="text-muted">{t("pendingDescriptionNoEmail")}</p>

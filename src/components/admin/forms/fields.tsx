@@ -12,6 +12,7 @@ export function FormField({
   step,
   min,
   max,
+  hint,
 }: {
   label: string;
   name: string;
@@ -22,6 +23,7 @@ export function FormField({
   step?: string;
   min?: string;
   max?: string;
+  hint?: string;
 }) {
   return (
     <div>
@@ -38,6 +40,7 @@ export function FormField({
         max={max}
         className="mt-2"
       />
+      {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
     </div>
   );
 }

@@ -1,6 +1,11 @@
 import type { AppointmentStatus, Prisma } from "@prisma/client";
 import { services } from "@/data/content";
-import { renderAdminBookingEmail, renderAppointmentEmail } from "@/lib/email-templates";
+import {
+  renderAdminBookingEmail,
+  renderAppointmentEmail,
+  renderConfirmationEmail,
+  renderRejectionEmail,
+} from "@/lib/email-templates";
 import { buildIcsEmailAttachment, generateIcsEvent } from "@/lib/ics";
 import { sendEmail, type SendEmailResult } from "@/lib/resend";
 
@@ -36,103 +41,25 @@ function serviceTitle(appointment: AppointmentWithDetails) {
   );
 }
 
-function formatDateTime(date: Date, locale: string) {
-  const loc = locale === "de" ? "de-DE" : "en-GB";
-  return {
-    date: date.toLocaleDateString(loc, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    time: date.toLocaleTimeString(loc, {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-  };
-}
-
-function appointmentDetails(appointment: AppointmentWithDetails) {
-  const isDe = appointment.locale === "de";
-  const service = serviceTitle(appointment);
-  const { date, time } = formatDateTime(appointment.startTime, appointment.locale);
-
-  return [
-    { label: isDe ? "Leistung" : "Service", value: service },
-    { label: isDe ? "Datum" : "Date", value: date },
-    { label: isDe ? "Uhrzeit" : "Time", value: time },
-    { label: isDe ? "Ort" : "Location", value: "Hamburg, Germany" },
-  ];
-}
-
-function bookingRequestHtml(appointment: AppointmentWithDetails) {
-  const isDe = appointment.locale === "de";
-  const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-
-  return renderAppointmentEmail({
-    locale: appointment.locale,
-    clientName: name,
-    headline: isDe ? "Buchungsanfrage erhalten" : "Booking request received",
-    intro: isDe
-      ? "Vielen Dank für Ihre Buchungsanfrage. Ich freue mich darauf, Sie bald zu verwöhnen."
-      : "Thank you for your booking request. I look forward to welcoming you soon.",
-    outro: isDe
-      ? "Ich bestätige Ihren Termin in der Regel innerhalb von 24–48 Stunden. Sie erhalten eine weitere E-Mail, sobald alles bestätigt ist."
-      : "I will confirm your appointment within 24–48 hours. You will receive another email once everything is confirmed.",
-    details: [
-      ...appointmentDetails(appointment),
-      { label: "Status", value: isDe ? "Ausstehend" : "Pending" },
-    ],
-    statusLabel: isDe ? "Ausstehend" : "Pending",
-    statusTone: "pending",
-  });
-}
-
-function bookingConfirmedHtml(appointment: AppointmentWithDetails) {
-  const isDe = appointment.locale === "de";
-  const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-
-  return renderAppointmentEmail({
-    locale: appointment.locale,
-    clientName: name,
-    headline: isDe ? "Ihr Termin ist bestätigt" : "Your appointment is confirmed",
-    intro: isDe
-      ? "Es ist mir eine Freude, Ihnen mitteilen zu können, dass Ihr Termin bestätigt wurde."
-      : "It is my pleasure to confirm that your appointment has been scheduled.",
-    outro: isDe
-      ? "Ich freue mich auf Sie und darauf, einen eleganten, individuellen Look für Sie zu kreieren."
-      : "I look forward to seeing you and creating an elegant, tailored look just for you.",
-    details: appointmentDetails(appointment),
-    statusLabel: isDe ? "Bestätigt" : "Confirmed",
-    statusTone: "confirmed",
-  });
-}
-
-function bookingCancelledHtml(appointment: AppointmentWithDetails) {
-  const isDe = appointment.locale === "de";
-  const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
-
-  return renderAppointmentEmail({
-    locale: appointment.locale,
-    clientName: name,
-    headline: isDe ? "Termin storniert" : "Appointment cancelled",
-    intro: isDe
-      ? "Ihr Termin wurde storniert. Bei Fragen oder einem neuen Wunschtermin stehe ich Ihnen gerne zur Verfügung."
-      : "Your appointment has been cancelled. If you have any questions or would like to rebook, please get in touch.",
-    outro: isDe
-      ? "Sie können jederzeit eine neue Buchungsanfrage über die Website stellen."
-      : "You are welcome to submit a new booking request at any time via the website.",
-    details: appointmentDetails(appointment),
-    statusLabel: isDe ? "Storniert" : "Cancelled",
-    statusTone: "cancelled",
-  });
-}
-
 export async function sendBookingRequestEmail(
   appointment: AppointmentWithDetails,
 ): Promise<SendEmailResult> {
   const isDe = appointment.locale === "de";
   const service = serviceTitle(appointment);
+  const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
+  const locale = appointment.locale;
+  const loc = isDe ? "de-DE" : "en-GB";
+
+  const dateStr = appointment.startTime.toLocaleDateString(loc, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const timeStr = appointment.startTime.toLocaleTimeString(loc, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   const ics = generateIcsEvent({
     title: service,
@@ -142,12 +69,32 @@ export async function sendBookingRequestEmail(
     uid: `booking-${appointment.id}@sepidehmihanparast.de`,
   });
 
+  const html = renderAppointmentEmail({
+    locale,
+    clientName: name,
+    headline: isDe ? "Terminanfrage erhalten" : "Appointment request received",
+    intro: isDe
+      ? "Vielen Dank für Ihre Terminanfrage! Wir haben Ihre Anfrage erhalten und werden sie so schnell wie möglich bearbeiten."
+      : "Thank you for your appointment request! We have received your request and will process it as soon as possible.",
+    outro: isDe
+      ? "Sie erhalten eine Bestätigungs-E-Mail, sobald Ihr Termin von uns bestätigt wurde. Bei Fragen stehen wir Ihnen gerne zur Verfügung."
+      : "You will receive a confirmation email once your appointment has been confirmed. Feel free to contact us if you have any questions.",
+    details: [
+      { label: isDe ? "Leistung" : "Service", value: service },
+      { label: isDe ? "Datum" : "Date", value: dateStr },
+      { label: isDe ? "Uhrzeit" : "Time", value: timeStr },
+      { label: "Status", value: isDe ? "Ausstehend" : "Pending" },
+    ],
+    statusLabel: isDe ? "Ausstehend" : "Pending",
+    statusTone: "pending",
+  });
+
   return sendEmail({
     to: resolveClientEmail(appointment.client.email),
     subject: isDe
-      ? "Ihre Buchungsanfrage — Sepideh Mihanparast"
-      : "Your Booking Request — Sepideh Mihanparast",
-    html: bookingRequestHtml(appointment),
+      ? `Terminanfrage erhalten — ${service}`
+      : `Appointment request received — ${service}`,
+    html,
     attachments: [buildIcsEmailAttachment(ics)],
   });
 }
@@ -160,7 +107,7 @@ export async function sendAdminNewBookingNotification(
 
   return sendEmail({
     to: adminEmail(),
-    subject: `New Booking: ${client.firstName} ${client.lastName}`,
+    subject: `[NEUE BUCHUNG] ${client.firstName} ${client.lastName} — ${service} — ${appointment.startTime.toLocaleString("de-DE")}`,
     html: renderAdminBookingEmail({
       clientName: `${client.firstName} ${client.lastName}`,
       clientEmail: client.email,
@@ -168,6 +115,7 @@ export async function sendAdminNewBookingNotification(
       service,
       startIso: appointment.startTime.toISOString(),
       notes: appointment.notes ?? "",
+      appointmentId: appointment.id,
     }),
   });
 }
@@ -175,12 +123,14 @@ export async function sendAdminNewBookingNotification(
 export async function notifyAppointmentStatusChange(
   appointment: AppointmentWithDetails,
   previousStatus: AppointmentStatus,
+  rejectionReason?: string | null,
 ): Promise<SendEmailResult> {
   const { status } = appointment;
   const isDe = appointment.locale === "de";
+  const service = serviceTitle(appointment);
+  const name = `${appointment.client.firstName} ${appointment.client.lastName}`;
 
   if (status === "CONFIRMED" && previousStatus !== "CONFIRMED") {
-    const service = serviceTitle(appointment);
     const ics = generateIcsEvent({
       title: service,
       description: appointment.notes || service,
@@ -192,20 +142,36 @@ export async function notifyAppointmentStatusChange(
     return sendEmail({
       to: resolveClientEmail(appointment.client.email),
       subject: isDe
-        ? "Termin bestätigt — Sepideh Mihanparast"
-        : "Appointment Confirmed — Sepideh Mihanparast",
-      html: bookingConfirmedHtml(appointment),
+        ? `Termin bestätigt — ${service} am ${appointment.startTime.toLocaleDateString("de-DE")}`
+        : `Appointment confirmed — ${service} on ${appointment.startTime.toLocaleDateString("en-GB")}`,
+      html: renderConfirmationEmail({
+        locale: appointment.locale,
+        clientName: name,
+        service,
+        startTime: appointment.startTime,
+        endTime: appointment.endTime,
+        appointmentId: appointment.id,
+      }),
       attachments: [buildIcsEmailAttachment(ics)],
     });
   }
 
-  if (status === "CANCELLED" && previousStatus !== "CANCELLED") {
+  if (
+    (status === "CANCELLED" || status === "REJECTED" as AppointmentStatus) &&
+    previousStatus !== status
+  ) {
     return sendEmail({
       to: resolveClientEmail(appointment.client.email),
       subject: isDe
-        ? "Termin storniert — Sepideh Mihanparast"
-        : "Appointment Cancelled — Sepideh Mihanparast",
-      html: bookingCancelledHtml(appointment),
+        ? `Zu Ihrer Terminanfrage — ${service}`
+        : `Regarding your appointment request — ${service}`,
+      html: renderRejectionEmail({
+        locale: appointment.locale,
+        clientName: name,
+        service,
+        startTime: appointment.startTime,
+        rejectionReason: rejectionReason ?? (appointment as AppointmentWithDetails & { rejectionReason?: string | null }).rejectionReason,
+      }),
     });
   }
 
