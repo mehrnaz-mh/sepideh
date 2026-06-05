@@ -143,16 +143,7 @@ export async function getAvailableDatesAction(
   serviceSlug: string,
   dates: string[],
 ) {
-  const { getAvailableSlots } = await import("@/lib/availability");
+  const { getAvailableDates } = await import("@/lib/availability");
   const { duration, buffer } = await getServiceTiming(serviceSlug);
-
-  const results = await Promise.all(
-    dates.map(async (dateStr) => {
-      const parsedDate = parse(dateStr, "yyyy-MM-dd", new Date());
-      const slots = await getAvailableSlots(parsedDate, duration, buffer);
-      return slots.length > 0 ? dateStr : null;
-    }),
-  );
-
-  return results.filter((d): d is string => d !== null);
+  return getAvailableDates(dates, duration, buffer);
 }
