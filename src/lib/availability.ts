@@ -71,7 +71,8 @@ export async function getAvailableSlots(
   });
 
   const slots: string[] = [];
-  const totalDuration = serviceDuration + bufferMinutes;
+  // Each slot occupies exactly 2 hours in the schedule
+  const slotDuration = 120;
 
   for (const rule of rules) {
     let current = parseTime(date, rule.startTime);
@@ -81,19 +82,19 @@ export async function getAvailableSlots(
     const end = parseTime(date, rule.endTime);
 
     while (current <= end) {
-      const slotWithBuffer = addMinutes(current, totalDuration);
+      const slotEnd = addMinutes(current, slotDuration);
 
       const blocked = blockedDates.some((b) => {
         if (b.allDay) return true;
         if (!b.startTime || !b.endTime) return false;
         const blockStart = parseTime(date, b.startTime);
         const blockEnd = parseTime(date, b.endTime);
-        return current < blockEnd && slotWithBuffer > blockStart;
+        return current < blockEnd && slotEnd > blockStart;
       });
 
+      // Only block if another appointment's actual time overlaps this slot
       const hasConflict = appointments.some((apt) => {
-        const aptEndWithBuffer = addMinutes(apt.endTime, bufferMinutes);
-        return current < aptEndWithBuffer && slotWithBuffer > apt.startTime;
+        return current < apt.endTime && slotEnd > apt.startTime;
       });
 
       const isPast = isBefore(current, new Date());
@@ -102,7 +103,7 @@ export async function getAvailableSlots(
         slots.push(format(current, "HH:mm"));
       }
 
-      current = addMinutes(current, 120);
+      current = addMinutes(current, slotDuration);
     }
   }
 
@@ -116,7 +117,7 @@ export async function getAvailableDates(
 ): Promise<string[]> {
   if (dates.length === 0) return [];
 
-  const totalDuration = serviceDuration + bufferMinutes;
+  const slotDuration = 120;
 
   const firstDate = parse(dates[0], "yyyy-MM-dd", new Date());
   const lastDate = parse(dates[dates.length - 1], "yyyy-MM-dd", new Date());
@@ -170,19 +171,18 @@ export async function getAvailableDates(
       const end = parseTime(date, rule.endTime);
 
       while (current <= end) {
-        const slotWithBuffer = addMinutes(current, totalDuration);
+        const slotEnd = addMinutes(current, slotDuration);
 
         const blocked = dayBlocked.some((b) => {
           if (b.allDay) return true;
           if (!b.startTime || !b.endTime) return false;
           const blockStart = parseTime(date, b.startTime);
           const blockEnd = parseTime(date, b.endTime);
-          return current < blockEnd && slotWithBuffer > blockStart;
+          return current < blockEnd && slotEnd > blockStart;
         });
 
         const hasConflict = dayAppointments.some((apt) => {
-          const aptEndWithBuffer = addMinutes(apt.endTime, bufferMinutes);
-          return current < aptEndWithBuffer && slotWithBuffer > apt.startTime;
+          return current < apt.endTime && slotEnd > apt.startTime;
         });
 
         const isPast = isBefore(current, new Date());
@@ -191,7 +191,7 @@ export async function getAvailableDates(
           hasSlot = true;
           break;
         }
-        current = addMinutes(current, 120);
+        current = addMinutes(current, slotDuration);
       }
       if (hasSlot) break;
     }
