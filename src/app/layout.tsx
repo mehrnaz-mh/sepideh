@@ -30,6 +30,10 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} h-full`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );

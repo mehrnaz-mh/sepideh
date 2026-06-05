@@ -117,6 +117,7 @@ export function PortfolioGallery({
                         height={800}
                         className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         unoptimized={item.image.startsWith("http")}
                       />
                       <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/50 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">

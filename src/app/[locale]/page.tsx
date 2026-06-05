@@ -210,6 +210,7 @@ export default async function HomePage({
                     width={600}
                     height={800}
                     className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <span className="text-xl text-white">{item[loc].title}</span>

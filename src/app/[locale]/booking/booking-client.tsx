@@ -18,7 +18,7 @@ import {
 } from "@/actions/booking";
 import { format, addDays, parse, startOfDay } from "date-fns";
 import { de, enGB } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, MessageCircle, MapPin, Sparkles, Star, Scissors, Wand2, Camera, Drama, Crown, CalendarHeart, Gem, MessageSquare, Waves } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, Star, Scissors, Wand2, Camera, Drama, Crown, CalendarHeart, Gem, MessageSquare, Waves } from "lucide-react";
 import { siteConfig } from "@/data/content";
 
 export default function BookingPage() {
@@ -127,31 +127,21 @@ export default function BookingPage() {
 
   return (
     <>
-      <section className="section-padding-hero bg-background-secondary">
-        <div className="luxury-container max-w-3xl">
-          <FadeIn>
-            <div className="gold-line mb-6" />
-            <h1 className="text-5xl">{t("title")}</h1>
-            <p className="mt-4 text-muted">{t("subtitle")}</p>
-          </FadeIn>
-
-          <div className="mt-10 flex gap-2">
-            {[t("stepService"), t("stepDate"), t("stepTime"), t("stepDetails")].map(
-              (label, i) => (
-                <div
-                  key={label}
-                  style={{ borderRadius: 0 }}
-                  className={`flex-1 border-b-2 pb-2 text-center text-xs uppercase tracking-widest ${
-                    i <= step ? "border-gold text-gold" : "border-border text-muted"
-                  }`}
-                >
-                  {label}
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-      </section>
+      <div className="mt-10 flex gap-2">
+        {[t("stepService"), t("stepDate"), t("stepTime"), t("stepDetails")].map(
+          (label, i) => (
+            <div
+              key={label}
+              style={{ borderRadius: 0 }}
+              className={`flex-1 border-b-2 pb-2 text-center text-xs uppercase tracking-widest ${
+                i <= step ? "border-gold text-gold" : "border-border text-muted"
+              }`}
+            >
+              {label}
+            </div>
+          ),
+        )}
+      </div>
 
       <section className="section-padding">
         <div className="luxury-container max-w-3xl">
@@ -164,36 +154,6 @@ export default function BookingPage() {
           {step === 0 && (
             <FadeIn>
               <h2 className="text-2xl">{t("selectService")}</h2>
-
-              {/* Studio info */}
-              <div className="mt-6 border border-border bg-background-secondary p-5">
-                <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-8">
-                  <a
-                    href={siteConfig.googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-muted hover:text-gold transition-colors"
-                  >
-                    <MapPin size={14} className="shrink-0 text-gold" />
-                    <span>
-                      {locale === "de" ? "Studio" : "Studio"}: {siteConfig.addressFull}
-                    </span>
-                  </a>
-                  <a
-                    href={siteConfig.whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-muted hover:text-gold transition-colors"
-                  >
-                    <MessageCircle size={14} className="shrink-0 text-gold" />
-                    <span>
-                      {locale === "de"
-                        ? "Für Terminreservierungen können Sie das Formular unten nutzen oder uns direkt per WhatsApp schreiben."
-                        : "To book an appointment, use the form below or message us directly on WhatsApp to reserve your slot."}
-                    </span>
-                  </a>
-                </div>
-              </div>
 
               {/* Main services grid */}
               <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -531,3 +491,4 @@ export default function BookingPage() {
     </>
   );
 }
+
