@@ -63,7 +63,7 @@ export function BlogFilter({
             <FadeIn key={post.slug} delay={i * 0.08}>
               <Link
                 href={`/blog/${post.slug}`}
-                className="group block border border-border transition-colors hover:border-gold overflow-hidden"
+                className="group block border border-border transition-colors hover:border-gold overflow-hidden rounded-lg"
               >
                 {post.image && (
                   <div className="relative aspect-video w-full overflow-hidden">

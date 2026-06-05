@@ -163,7 +163,7 @@ export default async function HomePage({
               <FadeIn key={service.slug} delay={i * 0.08}>
                 <Link
                   href={`/services/${service.slug}`}
-                  className="group block border border-border bg-background p-8 transition-all duration-300 hover:border-gold"
+                  className="group block border border-border bg-background p-8 transition-all duration-300 hover:border-gold rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     {serviceIcons[service.slug] ?? <Sparkles size={20} className="text-gold shrink-0" />}
@@ -232,7 +232,7 @@ export default async function HomePage({
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {testimonials.map((item, i) => (
               <FadeIn key={item.clientName} delay={i * 0.1}>
-                <div className="border border-border p-8">
+                <div className="border border-border p-8 rounded-lg">
                   <Quote className="text-gold" size={24} />
                   <p className="mt-4 leading-relaxed text-muted">{item[loc].content}</p>
                   <p className="mt-6 text-lg">— {item.clientName}</p>
@@ -268,7 +268,7 @@ export default async function HomePage({
           <div className="mt-12 space-y-6">
             {faqItems.map((item, i) => (
               <FadeIn key={i} delay={i * 0.05}>
-                <details className="group border border-border bg-background p-6">
+                <details className="group border border-border bg-background p-6 rounded-lg">
                   <summary className="cursor-pointer list-none text-lg">
                     {item[loc].question}
                   </summary>

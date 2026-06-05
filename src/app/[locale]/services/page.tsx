@@ -129,7 +129,7 @@ export default async function ServicesPage({
                       ))}
                       {/* VIP special block */}
                       <FadeIn>
-                        <div className="border border-border bg-background-secondary py-10 px-6 mt-4">
+                        <div className="border border-border bg-background-secondary py-10 px-6 mt-4 rounded-lg">
                           <p className="text-2xl">VIP Services</p>
                           <p className="mt-2 text-muted">
                             {loc === "de"
@@ -185,7 +185,7 @@ export default async function ServicesPage({
           <div className="mt-8 space-y-3">
             {faqItems.map((item, i) => (
               <FadeIn key={i} delay={i * 0.05}>
-                <details className="group border border-border bg-background px-6 py-5 open:border-gold/30">
+                <details className="group border border-border bg-background px-6 py-5 open:border-gold/30 rounded-lg">
                   <summary className="cursor-pointer list-none text-lg [&::-webkit-details-marker]:hidden">
                     <span className="flex items-center justify-between gap-4">
                       {item[loc].question}

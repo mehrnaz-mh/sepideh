@@ -122,7 +122,7 @@ export default async function AboutPage({
           <div className="mt-12 grid gap-8 md:grid-cols-2">
             {certifications.map((cert, i) => (
               <FadeIn key={cert.year + cert[loc].title} delay={i * 0.08}>
-                <div className="border border-border p-8">
+                <div className="border border-border p-8 rounded-lg">
                   <span className="text-xs uppercase tracking-widest text-gold">
                     {cert.year}
                   </span>

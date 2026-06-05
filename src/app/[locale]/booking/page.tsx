@@ -55,7 +55,7 @@ export default async function BookingPageWrapper({
             <p className="mt-4 text-muted">{t("subtitle")}</p>
           </FadeIn>
 
-          <div className="mt-6 border border-border bg-background p-5">
+          <div className="mt-6 border border-border bg-background p-5 rounded-lg">
             <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-8">
               <a
                 href={siteConfig.googleMapsUrl}

@@ -420,7 +420,7 @@ export default function BookingPage() {
               <div className="flex justify-center">
               <div className="w-full max-w-2xl">
               <h2 className="text-2xl">{t("yourDetails")}</h2>
-              <div className="mt-6 border border-border bg-background-secondary p-6">
+              <div className="mt-6 border border-border bg-background-secondary p-6 rounded-lg">
                 <h3 className="text-xs uppercase tracking-widest text-muted">
                   {t("summary")}
                 </h3>

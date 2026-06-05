@@ -99,7 +99,7 @@ export default async function ContactPage({
               href={siteConfig.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mb-12 flex items-center gap-4 border border-border bg-background-secondary p-6 transition-colors hover:border-gold group"
+              className="mb-12 flex items-center gap-4 border border-border bg-background-secondary p-6 transition-colors hover:border-gold group rounded-lg"
             >
               <span className="text-gold">
                 <WhatsAppIcon size={32} />
@@ -116,7 +116,7 @@ export default async function ContactPage({
           <div className="grid gap-8 md:grid-cols-2">
             {contactItems.map((item, i) => (
               <FadeIn key={item.label} delay={i * 0.1}>
-                <div className="border border-border p-8">
+                <div className="border border-border p-8 rounded-lg">
                   <item.icon className="text-gold" size={24} />
                   <p className="mt-4 text-xs uppercase tracking-widest text-muted">
                     {item.label}

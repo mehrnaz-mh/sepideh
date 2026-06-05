@@ -11,7 +11,7 @@ const buttonVariants = cva(
         default:
           "bg-foreground text-background hover:bg-foreground/90 px-8 py-3.5 tracking-wide uppercase",
         outline:
-          "border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background px-8 py-3.5 tracking-wide uppercase",
+          "border border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background px-4 py-3.5 tracking-wide uppercase",
         gold: "bg-gold text-white hover:bg-gold-accent px-4 py-3.5 tracking-wide uppercase",
         ghost: "hover:bg-background-secondary px-4 py-2",
         link: "text-gold underline-offset-4 hover:underline p-0 h-auto",
