@@ -203,7 +203,7 @@ export default async function HomePage({
           <div className="mt-12 columns-1 gap-4 sm:columns-2 lg:columns-3">
             {featuredPortfolio.map((item, i) => (
               <FadeIn key={item.slug} delay={i * 0.05} className="mb-4 break-inside-avoid">
-                <Link href="/portfolio" className="group relative block overflow-hidden">
+                <Link href="/portfolio" className="group relative block overflow-hidden rounded-lg">
                   <Image
                     src={item.image}
                     alt={item[loc].altText}
