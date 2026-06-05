@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/page-header";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   getAppointments,
@@ -12,20 +11,20 @@ import { DeleteButton } from "@/components/admin/delete-button";
 import { Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AppointmentStatus } from "@prisma/client";
 
-const statusVariant: Record<string, "default" | "success" | "warning" | "danger"> = {
-  PENDING: "warning",
-  CONFIRMED: "success",
-  COMPLETED: "default",
-  CANCELLED: "danger",
-  NO_SHOW: "danger",
+const statusStyles: Record<string, string> = {
+  PENDING: "bg-amber-100 text-amber-800",
+  CONFIRMED: "bg-green-100 text-green-800",
+  COMPLETED: "bg-background-secondary text-muted",
+  CANCELLED: "bg-red-100 text-red-700",
+  NO_SHOW: "bg-red-100 text-red-700",
 };
 
 const statusLabel: Record<string, string> = {
-  PENDING: "Ausstehend",
-  CONFIRMED: "Bestätigt",
-  COMPLETED: "Abgeschlossen",
-  CANCELLED: "Storniert",
-  NO_SHOW: "Nicht erschienen",
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  NO_SHOW: "No Show",
 };
 
 const PAGE_SIZE = 15;
@@ -49,11 +48,11 @@ export default async function AdminAppointmentsPage({
   const appointments = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const tabs: Array<{ key: string; label: string }> = [
-    { key: "ALL", label: "Alle" },
-    { key: "PENDING", label: "Ausstehend" },
-    { key: "CONFIRMED", label: "Bestätigt" },
-    { key: "COMPLETED", label: "Abgeschlossen" },
-    { key: "CANCELLED", label: "Storniert" },
+    { key: "ALL", label: "All" },
+    { key: "PENDING", label: "Pending" },
+    { key: "CONFIRMED", label: "Confirmed" },
+    { key: "COMPLETED", label: "Completed" },
+    { key: "CANCELLED", label: "Cancelled" },
   ];
 
   function pageHref(p: number) {
@@ -78,12 +77,12 @@ export default async function AdminAppointmentsPage({
   }
 
   return (
-    <div>
+    <div className="min-w-0">
       <AdminPageHeader
-        title="Termine"
-        description="Alle Buchungsanfragen und Termine verwalten"
+        title="Appointments"
+        description="Manage all booking requests and appointments"
         createHref="/admin/appointments/new"
-        createLabel="Neuer Termin"
+        createLabel="New Appointment"
       />
 
       {/* Filter tabs */}
@@ -98,7 +97,7 @@ export default async function AdminAppointmentsPage({
               key={tab.key}
               href={tab.key === "ALL" ? "/admin/appointments" : `/admin/appointments?filter=${tab.key}`}
               className={cn(
-                "border px-4 py-1.5 text-xs uppercase tracking-widest transition-colors",
+                "rounded-sm border px-3 py-1.5 text-xs uppercase tracking-widest transition-colors",
                 activeFilter === tab.key
                   ? "border-gold bg-gold/10 text-gold"
                   : "border-border hover:border-gold text-muted",
@@ -110,23 +109,127 @@ export default async function AdminAppointmentsPage({
         })}
       </div>
 
-      <div className="overflow-x-auto border border-border bg-background">
+      {/* Mobile: card list */}
+      <div className="flex flex-col gap-2 lg:hidden">
+        {appointments.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted">No appointments found</p>
+        ) : (
+          appointments.map((apt) => (
+            <div key={apt.id} className="border border-border bg-background rounded-sm p-4 min-w-0">
+              {/* Top row: name + status */}
+              <div className="flex items-start justify-between gap-2 min-w-0">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-sm text-foreground">
+                    {apt.client.firstName} {apt.client.lastName}
+                  </p>
+                  <p className="truncate text-xs text-muted">{apt.client.email}</p>
+                  {apt.client.phone && (
+                    <a
+                      href={`tel:${apt.client.phone.replace(/\s/g, "")}`}
+                      className="text-xs text-foreground hover:text-gold"
+                    >
+                      {apt.client.phone}
+                    </a>
+                  )}
+                </div>
+                <span className={`shrink-0 rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-wider ${statusStyles[apt.status] ?? "bg-background-secondary text-muted"}`}>
+                  {statusLabel[apt.status] ?? apt.status}
+                </span>
+              </div>
+
+              {/* Service + date */}
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                <span>
+                  {apt.service.translations.find((t) => t.locale === "en")?.title ??
+                    apt.service.translations[0]?.title}
+                </span>
+                <span>
+                  {apt.startTime.toLocaleString("en-GB", {
+                    weekday: "short",
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+
+              {apt.notes && (
+                <p className="mt-1 text-xs text-muted italic line-clamp-2">{apt.notes}</p>
+              )}
+
+              {/* Actions */}
+              <div className="mt-3 flex items-center gap-3">
+                <Link
+                  href={`/admin/appointments/${apt.id}/edit`}
+                  className="text-muted hover:text-gold transition-colors"
+                  title="Edit"
+                >
+                  <Pencil size={15} />
+                </Link>
+                <DeleteButton
+                  action={deleteAppointment.bind(null, apt.id)}
+                  label=""
+                  confirmMessage="Delete appointment?"
+                />
+                {apt.status === "PENDING" && (
+                  <>
+                    <form action={confirmAction}>
+                      <input type="hidden" name="appointmentId" value={apt.id} />
+                      <button
+                        type="submit"
+                        className="rounded-sm border border-green-600 bg-green-50 px-3 py-1 text-[11px] uppercase tracking-widest text-green-700 hover:bg-green-100 transition-colors"
+                      >
+                        ✓ Confirm
+                      </button>
+                    </form>
+                    <details>
+                      <summary className="cursor-pointer rounded-sm border border-red-300 bg-red-50 px-3 py-1 text-[11px] uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors list-none">
+                        ✕ Decline
+                      </summary>
+                      <form action={rejectAction} className="mt-2 border border-border bg-background p-3 rounded-sm">
+                        <input type="hidden" name="appointmentId" value={apt.id} />
+                        <textarea
+                          name="rejectionReason"
+                          placeholder="Reason (optional)"
+                          className="w-full border border-border bg-background-secondary px-3 py-2 text-sm resize-none rounded-sm"
+                          rows={2}
+                        />
+                        <button
+                          type="submit"
+                          className="mt-2 w-full rounded-sm border border-red-400 bg-red-50 px-3 py-1.5 text-xs uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors"
+                        >
+                          Confirm Decline
+                        </button>
+                      </form>
+                    </details>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden lg:block overflow-x-auto border border-border bg-background rounded-sm">
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-background-secondary">
             <tr>
-              <th className="px-4 py-3 text-left font-medium w-1/4">Kunde</th>
-              <th className="px-4 py-3 text-left font-medium">Telefon</th>
-              <th className="px-4 py-3 text-left font-medium">Leistung</th>
-              <th className="px-4 py-3 text-left font-medium">Termin</th>
-              <th className="px-4 py-3 text-left font-medium">Status</th>
-              <th className="px-4 py-3 text-right font-medium">Aktionen</th>
+              <th className="px-4 py-3 text-left text-xs uppercase tracking-widest font-medium text-muted w-1/4">Client</th>
+              <th className="px-4 py-3 text-left text-xs uppercase tracking-widest font-medium text-muted">Phone</th>
+              <th className="px-4 py-3 text-left text-xs uppercase tracking-widest font-medium text-muted">Service</th>
+              <th className="px-4 py-3 text-left text-xs uppercase tracking-widest font-medium text-muted">Appointment</th>
+              <th className="px-4 py-3 text-left text-xs uppercase tracking-widest font-medium text-muted">Status</th>
+              <th className="px-4 py-3 text-right text-xs uppercase tracking-widest font-medium text-muted">Actions</th>
             </tr>
           </thead>
           <tbody>
             {appointments.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center text-muted">
-                  Keine Termine gefunden
+                  No appointments found
                 </td>
               </tr>
             ) : (
@@ -160,19 +263,19 @@ export default async function AdminAppointmentsPage({
                       apt.service.translations[0]?.title}
                   </td>
                   <td className="px-4 py-3">
-                    {apt.startTime.toLocaleString("de-DE", {
+                    {apt.startTime.toLocaleString("en-GB", {
                       weekday: "short",
                       day: "2-digit",
-                      month: "2-digit",
+                      month: "short",
                       year: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant={statusVariant[apt.status] ?? "default"}>
+                    <span className={`rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-wider ${statusStyles[apt.status] ?? "bg-background-secondary text-muted"}`}>
                       {statusLabel[apt.status] ?? apt.status}
-                    </Badge>
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col items-end gap-2">
@@ -180,14 +283,14 @@ export default async function AdminAppointmentsPage({
                         <Link
                           href={`/admin/appointments/${apt.id}/edit`}
                           className="text-muted hover:text-gold transition-colors"
-                          title="Bearbeiten"
+                          title="Edit"
                         >
                           <Pencil size={15} />
                         </Link>
                         <DeleteButton
                           action={deleteAppointment.bind(null, apt.id)}
                           label=""
-                          confirmMessage="Termin löschen?"
+                          confirmMessage="Delete appointment?"
                         />
                       </div>
 
@@ -197,34 +300,33 @@ export default async function AdminAppointmentsPage({
                             <input type="hidden" name="appointmentId" value={apt.id} />
                             <button
                               type="submit"
-                              className="border border-green-600 bg-green-50 px-3 py-1 text-[11px] uppercase tracking-widest text-green-700 hover:bg-green-100 transition-colors"
+                              className="rounded-sm border border-green-600 bg-green-50 px-3 py-1 text-[11px] uppercase tracking-widest text-green-700 hover:bg-green-100 transition-colors"
                             >
-                              ✓ Bestätigen
+                              ✓ Confirm
                             </button>
                           </form>
                           <details className="w-full">
-                            <summary className="cursor-pointer border border-red-300 bg-red-50 px-3 py-1 text-[11px] uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors list-none text-right">
-                              ✕ Ablehnen
+                            <summary className="cursor-pointer rounded-sm border border-red-300 bg-red-50 px-3 py-1 text-[11px] uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors list-none text-right">
+                              ✕ Decline
                             </summary>
-                            <form action={rejectAction} className="mt-2 border border-border bg-background p-3">
+                            <form action={rejectAction} className="mt-2 border border-border bg-background p-3 rounded-sm">
                               <input type="hidden" name="appointmentId" value={apt.id} />
                               <textarea
                                 name="rejectionReason"
-                                placeholder="Begründung (optional)"
-                                className="w-full border border-border bg-background-secondary px-3 py-2 text-sm resize-none"
+                                placeholder="Reason (optional)"
+                                className="w-full border border-border bg-background-secondary px-3 py-2 text-sm resize-none rounded-sm"
                                 rows={2}
                               />
                               <button
                                 type="submit"
-                                className="mt-2 w-full border border-red-400 bg-red-50 px-3 py-1.5 text-xs uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors"
+                                className="mt-2 w-full rounded-sm border border-red-400 bg-red-50 px-3 py-1.5 text-xs uppercase tracking-widest text-red-700 hover:bg-red-100 transition-colors"
                               >
-                                Ablehnung bestätigen
+                                Confirm Decline
                               </button>
                             </form>
                           </details>
                         </div>
                       )}
-
                     </div>
                   </td>
                 </tr>
@@ -236,12 +338,12 @@ export default async function AdminAppointmentsPage({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between text-sm text-muted">
-          <span>{filtered.length} Termine · Seite {currentPage} von {totalPages}</span>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-muted">
+          <span>{filtered.length} appointments · Page {currentPage} of {totalPages}</span>
           <div className="flex items-center gap-1">
             {currentPage > 1 && (
-              <Link href={pageHref(currentPage - 1)} className="flex items-center gap-1 border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
-                <ChevronLeft size={14} /> Zurück
+              <Link href={pageHref(currentPage - 1)} className="flex items-center gap-1 rounded-sm border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
+                <ChevronLeft size={14} /> Prev
               </Link>
             )}
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
@@ -249,7 +351,7 @@ export default async function AdminAppointmentsPage({
                 key={p}
                 href={pageHref(p)}
                 className={cn(
-                  "border px-3 py-1.5 transition-colors",
+                  "rounded-sm border px-3 py-1.5 transition-colors",
                   p === currentPage
                     ? "border-gold bg-gold/10 text-gold"
                     : "border-border hover:border-gold hover:text-gold"
@@ -259,8 +361,8 @@ export default async function AdminAppointmentsPage({
               </Link>
             ))}
             {currentPage < totalPages && (
-              <Link href={pageHref(currentPage + 1)} className="flex items-center gap-1 border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
-                Weiter <ChevronRight size={14} />
+              <Link href={pageHref(currentPage + 1)} className="flex items-center gap-1 rounded-sm border border-border px-3 py-1.5 hover:border-gold hover:text-gold transition-colors">
+                Next <ChevronRight size={14} />
               </Link>
             )}
           </div>

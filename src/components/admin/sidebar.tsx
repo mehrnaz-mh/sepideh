@@ -51,7 +51,7 @@ export function AdminSidebar({ pendingCount = 0 }: { pendingCount?: number }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 text-sm transition-colors",
+                "flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition-colors",
                 active
                   ? "bg-background-secondary text-gold"
                   : "text-muted hover:bg-background-secondary hover:text-foreground",
@@ -60,7 +60,7 @@ export function AdminSidebar({ pendingCount = 0 }: { pendingCount?: number }) {
               <item.icon size={18} />
               <span className="flex-1">{item.label}</span>
               {item.badge && pendingCount > 0 && (
-                <span className="flex h-5 min-w-5 items-center justify-center rounded bg-red-500 px-1.5 text-[11px] font-semibold text-white">
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-sm bg-red-500 px-1.5 text-[11px] font-semibold text-white">
                   {pendingCount}
                 </span>
               )}

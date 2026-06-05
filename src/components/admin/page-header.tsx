@@ -13,13 +13,13 @@ export function AdminPageHeader({
   createLabel?: string;
 }) {
   return (
-    <div className="mb-8 flex items-start justify-between gap-4">
-      <div>
-        <h1 className="font-serif text-3xl">{title}</h1>
-        {description && <p className="mt-2 text-muted">{description}</p>}
+    <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="min-w-0">
+        <h1 className="font-serif text-2xl text-foreground sm:text-3xl">{title}</h1>
+        {description && <p className="mt-1 text-sm text-muted">{description}</p>}
       </div>
       {createHref && (
-        <Button asChild variant="gold" size="sm">
+        <Button asChild variant="gold" size="sm" className="shrink-0 rounded-sm">
           <Link href={createHref}>{createLabel}</Link>
         </Button>
       )}

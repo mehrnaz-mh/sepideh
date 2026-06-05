@@ -1,4 +1,22 @@
 import { prisma } from "@/lib/prisma";
+import { AdminPageHeader } from "@/components/admin/page-header";
+import Link from "next/link";
+
+const statusStyles: Record<string, string> = {
+  PENDING: "bg-amber-100 text-amber-800",
+  CONFIRMED: "bg-green-100 text-green-800",
+  COMPLETED: "bg-background-secondary text-muted",
+  CANCELLED: "bg-red-100 text-red-700",
+  NO_SHOW: "bg-red-100 text-red-700",
+};
+
+const statusLabel: Record<string, string> = {
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  NO_SHOW: "No Show",
+};
 
 export default async function AdminCalendarPage() {
   let appointments: Awaited<
@@ -26,43 +44,57 @@ export default async function AdminCalendarPage() {
   }
 
   return (
-    <div>
-      <h1 className="font-serif text-3xl">Calendar</h1>
-      <div className="mt-8 space-y-4">
-        {appointments.map((apt) => (
-          <div
-            key={apt.id}
-            className="flex items-center gap-6 border border-border bg-background p-6"
-          >
-            <div className="min-w-[120px] text-center">
-              <p className="font-serif text-2xl text-gold">
-                {apt.startTime.getDate()}
-              </p>
-              <p className="text-xs uppercase tracking-widest text-muted">
-                {apt.startTime.toLocaleDateString("de-DE", { month: "short" })}
-              </p>
-            </div>
-            <div>
-              <p className="font-serif text-lg">
-                {apt.client.firstName} {apt.client.lastName}
-              </p>
-              <p className="text-sm text-muted">
-                {apt.service.translations[0]?.title}
-              </p>
-              <p className="text-sm text-muted">
-                {apt.startTime.toLocaleTimeString("de-DE", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-            <span className="ml-auto text-xs uppercase">{apt.status}</span>
-          </div>
-        ))}
-        {appointments.length === 0 && (
-          <p className="text-muted">No upcoming appointments</p>
-        )}
-      </div>
+    <div className="min-w-0">
+      <AdminPageHeader title="Calendar" description="Upcoming confirmed and pending appointments" />
+
+      {appointments.length === 0 ? (
+        <p className="py-12 text-center text-sm text-muted">No upcoming appointments</p>
+      ) : (
+        <div className="space-y-3">
+          {appointments.map((apt) => (
+            <Link
+              key={apt.id}
+              href={`/admin/appointments/${apt.id}/edit`}
+              className="flex items-center gap-4 border border-border bg-background p-4 rounded-sm hover:border-gold transition-colors min-w-0"
+            >
+              {/* Date block */}
+              <div className="shrink-0 w-12 text-center">
+                <p className="font-serif text-2xl text-gold leading-none">
+                  {apt.startTime.getDate()}
+                </p>
+                <p className="mt-0.5 text-[10px] uppercase tracking-widest text-muted">
+                  {apt.startTime.toLocaleDateString("en-GB", { month: "short" })}
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="shrink-0 w-px self-stretch bg-border" />
+
+              {/* Info */}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-sm text-foreground">
+                  {apt.client.firstName} {apt.client.lastName}
+                </p>
+                <p className="truncate text-xs text-muted">
+                  {apt.service.translations.find((t) => t.locale === "en")?.title ??
+                    apt.service.translations[0]?.title}
+                </p>
+                <p className="text-xs text-muted">
+                  {apt.startTime.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              </div>
+
+              {/* Status */}
+              <span className={`shrink-0 rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-wider ${statusStyles[apt.status] ?? "bg-background-secondary text-muted"}`}>
+                {statusLabel[apt.status] ?? apt.status}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
