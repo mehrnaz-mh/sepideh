@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { LazyMotion, domAnimation, m, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 
 interface TextRevealProps {
@@ -22,13 +22,15 @@ export function TextReveal({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <Tag className={className}>{children}</Tag>
-    </motion.div>
+    <LazyMotion features={domAnimation} strict>
+      <m.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Tag className={className}>{children}</Tag>
+      </m.div>
+    </LazyMotion>
   );
 }
