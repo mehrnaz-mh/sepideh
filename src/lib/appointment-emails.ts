@@ -61,14 +61,6 @@ export async function sendBookingRequestEmail(
     minute: "2-digit",
   });
 
-  const ics = generateIcsEvent({
-    title: service,
-    description: appointment.notes || service,
-    startTime: appointment.startTime,
-    endTime: appointment.endTime,
-    uid: `booking-${appointment.id}@sepidehmihanparast.de`,
-  });
-
   const html = renderAppointmentEmail({
     locale,
     clientName: name,
@@ -87,13 +79,15 @@ export async function sendBookingRequestEmail(
     ],
   });
 
+  // The first email is just an acknowledgement that the request was received
+  // (status: pending). No calendar invite / .ics attachment here — that is
+  // only sent once the appointment is actually confirmed.
   return sendEmail({
     to: resolveClientEmail(appointment.client.email),
     subject: isDe
       ? `Terminanfrage erhalten — ${service}`
       : `Appointment request received — ${service}`,
     html,
-    attachments: [buildIcsEmailAttachment(ics)],
   });
 }
 
