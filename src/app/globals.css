@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@custom-variant rtl ([dir="rtl"] &);
+
+[dir="rtl"] {
+  --font-serif: var(--font-vazirmatn), sans-serif;
+  --font-sans: var(--font-vazirmatn), sans-serif;
+}
+
 :root {
   --background: #F7F6F2;
   --background-secondary: #EEEDE8;
@@ -65,6 +72,31 @@ h6 {
   font-family: var(--font-inter), system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: -0.02em;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  font-family: var(--font-vazirmatn), sans-serif;
+  letter-spacing: 0;
+}
+
+.font-fa,
+.font-fa h1,
+.font-fa h2,
+.font-fa h3,
+.font-fa h4,
+.font-fa h5,
+.font-fa h6,
+.font-fa p,
+.font-fa li,
+.font-fa span,
+.font-fa summary {
+  font-family: var(--font-vazirmatn), sans-serif !important;
+  letter-spacing: 0;
 }
 
 ::selection {

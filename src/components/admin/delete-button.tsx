@@ -24,10 +24,13 @@ export function DeleteButton({
     >
       <button
         type="submit"
-        className="inline-flex items-center text-xs uppercase tracking-wide text-red-600 transition-colors hover:text-red-700 disabled:opacity-50"
+        className="text-muted hover:text-red-600 transition-colors disabled:opacity-50 leading-none translate-y-[2px]"
       >
-        {label !== "" && <Trash2 size={14} className="mr-1" />}
-        {label === "" ? <Trash2 size={14} /> : label}
+        {label === "" ? <Trash2 size={16} /> : (
+          <span className="inline-flex items-center gap-1 text-xs uppercase tracking-wide">
+            <Trash2 size={16} />{label}
+          </span>
+        )}
       </button>
     </form>
   );

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormField } from "@/components/admin/forms/fields";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
@@ -11,7 +11,7 @@ export function MediaUploadSection({
 }) {
   return (
     <form action={action} className="mb-8 border border-border bg-background p-6">
-      <h2 className="font-serif text-xl">Add Media</h2>
+      <h2 className="text-xl">Add Media</h2>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div className="md:col-span-2">
           <ImageUploadField
@@ -31,3 +31,4 @@ export function MediaUploadSection({
     </form>
   );
 }
+

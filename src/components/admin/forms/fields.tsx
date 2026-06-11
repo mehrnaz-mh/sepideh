@@ -1,3 +1,5 @@
+"use client";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +41,7 @@ export function FormField({
         min={min}
         max={max}
         className="mt-2"
+        dir={type === "date" || type === "time" || type === "datetime-local" ? "ltr" : undefined}
       />
       {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
     </div>
@@ -131,7 +134,7 @@ export function SelectField({
 export function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border border-border bg-background p-6">
-      <h3 className="mb-4 font-serif text-lg">{title}</h3>
+      <h3 className="mb-4 text-lg">{title}</h3>
       <div className="grid gap-4 md:grid-cols-2">{children}</div>
     </div>
   );

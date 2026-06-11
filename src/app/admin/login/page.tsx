@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md border border-border bg-background p-8">
-        <h1 className="font-serif text-3xl">Admin Login</h1>
+        <h1 className="text-3xl">Admin Login</h1>
         <p className="mt-2 text-sm text-muted">Sepideh Mihanparast Dashboard</p>
 
         <form action={loginAction} className="mt-8 space-y-6">
@@ -52,3 +52,4 @@ export default function AdminLoginPage() {
     </div>
   );
 }
+

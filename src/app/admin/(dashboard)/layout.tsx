@@ -1,5 +1,4 @@
-import { AdminSidebar } from "@/components/admin/sidebar";
-import { MobileSidebarTrigger } from "@/components/admin/mobile-sidebar";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { ToastNotification } from "@/components/admin/toast-notification";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -23,47 +22,16 @@ export default async function AdminDashboardLayout({
   } catch {}
 
   return (
-    <div className="min-h-screen bg-background-secondary overflow-x-hidden">
-      {/* Desktop sidebar */}
-      <div className="hidden lg:block">
-        <AdminSidebar pendingCount={pendingCount} />
-      </div>
-
-      {/* Main content area */}
-      <div className="lg:pl-64">
-        {/* Top header */}
-        <header className="flex h-16 items-center justify-between border-b border-border bg-background px-4 sm:px-8">
-          <div className="flex items-center gap-3">
-            {/* Mobile hamburger */}
-            <div className="lg:hidden">
-              <MobileSidebarTrigger pendingCount={pendingCount} />
-            </div>
-            <p className="text-sm text-muted">
-              Welcome, <span className="text-foreground">{session.user.name}</span>
-            </p>
-          </div>
-          <form
-            action={async () => {
-              "use server";
-              const { signOut } = await import("@/lib/auth");
-              await signOut({ redirectTo: "/admin/login" });
-            }}
-          >
-            <button
-              type="submit"
-              className="text-sm text-muted transition-colors hover:text-gold"
-            >
-              Sign Out
-            </button>
-          </form>
-        </header>
-
-        <main className="min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
-
+    <>
+      <AdminShell
+        pendingCount={pendingCount}
+        userName={session.user.name ?? ""}
+      >
+        {children}
+      </AdminShell>
       <Suspense>
         <ToastNotification />
       </Suspense>
-    </div>
+    </>
   );
 }

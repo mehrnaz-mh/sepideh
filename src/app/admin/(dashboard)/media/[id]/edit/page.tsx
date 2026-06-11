@@ -1,7 +1,6 @@
-import { notFound, redirect } from "next/navigation";
-import { AdminFormShell } from "@/components/admin/form-shell";
-import { MediaEditFields } from "@/components/admin/media-edit-upload";
-import { getMediaFile, updateMediaFile } from "@/actions/media";
+import { notFound } from "next/navigation";
+import { getMediaFile } from "@/actions/media";
+import { EditMediaClient } from "./edit-media-client";
 
 export default async function EditMediaPage({
   params,
@@ -12,20 +11,12 @@ export default async function EditMediaPage({
   const file = await getMediaFile(id);
   if (!file) notFound();
 
-  async function action(formData: FormData) {
-    "use server";
-    const result = await updateMediaFile(id, formData);
-    if (!result.success) redirect(`/admin/media/${id}/edit?error=1`);
-    redirect("/admin/media");
-  }
-
   return (
-    <AdminFormShell title="Edit Media" backHref="/admin/media" action={action}>
-      <MediaEditFields
-        defaultUrl={file.url}
-        defaultAlt={file.altText ?? ""}
-        defaultFolder={file.folder ?? "uploads"}
-      />
-    </AdminFormShell>
+    <EditMediaClient
+      id={id}
+      defaultUrl={file.url}
+      defaultAlt={file.altText ?? ""}
+      defaultFolder={file.folder ?? "uploads"}
+    />
   );
 }

@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
     },
   },
   async headers() {
-    return [
+    const baseHeaders = [
       {
         source: "/(.*)",
         headers: [
@@ -32,19 +32,31 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
-      {
-        source: "/:path*\\.:ext(jpg|jpeg|png|webp|avif|svg|ico|gif)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
-      {
-        source: "/_next/static/:path*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
     ];
+
+    // Long-lived immutable caching of static assets is only safe in
+    // production, where filenames are content-hashed. In dev, Turbopack serves
+    // assets at stable paths without hashes, so an immutable Cache-Control
+    // makes the browser hold onto stale JS/CSS bundles forever — which causes
+    // hydration mismatches after edits. So only apply it in production.
+    if (process.env.NODE_ENV === "production") {
+      baseHeaders.push(
+        {
+          source: "/:path*\\.:ext(jpg|jpeg|png|webp|avif|svg|ico|gif)",
+          headers: [
+            { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          ],
+        },
+        {
+          source: "/_next/static/:path*",
+          headers: [
+            { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          ],
+        },
+      );
+    }
+
+    return baseHeaders;
   },
 };
 

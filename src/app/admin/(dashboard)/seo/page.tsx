@@ -1,12 +1,12 @@
-import { siteConfig } from "@/data/content";
+﻿import { siteConfig } from "@/data/content";
 
 export default function AdminSeoPage() {
   return (
     <div>
-      <h1 className="font-serif text-3xl">SEO</h1>
+      <h1 className="text-3xl">SEO</h1>
       <div className="mt-8 space-y-6">
         <div className="border border-border bg-background p-6">
-          <h2 className="font-serif text-xl">Site Configuration</h2>
+          <h2 className="text-xl">Site Configuration</h2>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted">Site URL</dt>
@@ -23,7 +23,7 @@ export default function AdminSeoPage() {
           </dl>
         </div>
         <div className="border border-border bg-background p-6">
-          <h2 className="font-serif text-xl">Structured Data</h2>
+          <h2 className="text-xl">Structured Data</h2>
           <ul className="mt-4 list-inside list-disc text-sm text-muted">
             <li>LocalBusiness / BeautySalon schema on homepage</li>
             <li>Person schema on homepage</li>
@@ -36,3 +36,4 @@ export default function AdminSeoPage() {
     </div>
   );
 }
+

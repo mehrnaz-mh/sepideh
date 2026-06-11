@@ -1,45 +1,59 @@
+"use client";
+
 import Link from "next/link";
+import { Pencil } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { Badge } from "@/components/ui/badge";
+import { useAdminLang } from "@/components/admin/lang-context";
+import { useEffect, useState } from "react";
 import { getServices, deleteService } from "@/actions/services";
-export default async function AdminServicesPage() {
-  const services = await getServices();
+
+type Service = Awaited<ReturnType<typeof getServices>>[number];
+
+export default function AdminServicesPage() {
+  const { t, lang } = useAdminLang();
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    getServices().then(setServices);
+  }, []);
 
   return (
     <div>
       <AdminPageHeader
-        title="Services"
-        description="Manage beauty services"
+        titleKey="servicesTitle"
+        descriptionKey="servicesDesc"
         createHref="/admin/services/new"
-        createLabel="New Service"
+        createLabelKey="newService"
       />
 
-      <div className="grid gap-4">
+      <div className="grid gap-3">
         {services.map((service) => {
-          const title = service.translations.find((t) => t.locale === "de")?.title ?? service.slug;
+          const title =
+            service.translations.find((tr) => tr.locale === "de")?.title ??
+            service.slug;
           return (
             <div
               key={service.id}
-              className="flex items-center justify-between border border-border bg-background p-6"
+              className="flex items-center justify-between border border-border bg-background p-5 rounded-sm"
             >
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="font-serif text-xl">{title}</h2>
+                  <h2 className="text-lg">{title}</h2>
                   <Badge variant={service.isActive ? "success" : "default"}>
-                    {service.isActive ? "Active" : "Inactive"}
+                    {service.isActive ? t("active") : t("inactive")}
                   </Badge>
                 </div>
-                <p className="mt-1 text-sm text-muted">
-                  {service.durationMinutes} min · {service.slug}
-                </p>
+                <p className="mt-1 text-xs text-muted">{service.slug}</p>
               </div>
               <div className="flex items-center gap-3">
                 <Link
                   href={`/admin/services/${service.id}/edit`}
-                  className="text-xs uppercase tracking-wide text-gold hover:underline"
+                  className="text-muted hover:text-gold transition-colors"
+                  title="Edit"
                 >
-                  Edit
+                  <Pencil size={16} />
                 </Link>
                 <DeleteButton action={deleteService.bind(null, service.id)} label="" />
               </div>
