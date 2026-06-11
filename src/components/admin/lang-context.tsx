@@ -1,6 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+
+const STORAGE_KEY = "admin-lang";
 
 type AdminLang = "en" | "fa";
 
@@ -358,7 +360,24 @@ const AdminLangContext = createContext<AdminLangContextValue>({
 });
 
 export function AdminLangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<AdminLang>("en");
+  // Always start as "en" so the server render and the first client render
+  // match (avoids hydration mismatch). The stored preference is applied in an
+  // effect after hydration.
+  const [lang, setLangState] = useState<AdminLang>("en");
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "fa" || stored === "en") {
+      setLangState(stored);
+    }
+  }, []);
+
+  function setLang(l: AdminLang) {
+    setLangState(l);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+    } catch {}
+  }
 
   function t(key: string): string {
     return translations[lang][key] ?? translations["en"][key] ?? key;
