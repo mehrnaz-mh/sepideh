@@ -4,9 +4,16 @@ import {
   CheckboxField,
   FormField,
   FormSection,
+  SelectField,
   TextAreaField,
 } from "@/components/admin/forms/fields";
 import { createService } from "@/actions/services";
+import { SERVICE_ICON_LABELS } from "@/lib/service-icons";
+
+const iconOptions = [
+  { value: "", label: "—" },
+  ...Object.entries(SERVICE_ICON_LABELS).map(([value, label]) => ({ value, label })),
+];
 
 export default function NewServicePage() {
   async function action(formData: FormData) {
@@ -23,6 +30,7 @@ export default function NewServicePage() {
         <FormField label="Sort Order" name="sortOrder" type="number" defaultValue={0} />
         <FormField label="Duration (minutes)" name="durationMinutes" type="number" defaultValue={60} required />
         <FormField label="Buffer (minutes)" name="bufferMinutes" type="number" defaultValue={15} />
+        <SelectField label="Icon" name="icon" options={iconOptions} />
         <CheckboxField label="Active" name="isActive" defaultChecked />
       </FormSection>
       <FormSection title="German Content">

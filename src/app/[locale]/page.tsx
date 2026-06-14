@@ -3,7 +3,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import { Crown, Wand2, Scissors, Sparkles, Camera, Star, Drama, Waves, Gem } from "lucide-react";
+import { getServiceIcon } from "@/lib/service-icons";
 import { FadeIn } from "@/components/motion/fade-in";
 import { TextReveal } from "@/components/motion/text-reveal";
 import {
@@ -149,28 +149,17 @@ export default async function HomePage({
             <div className="gold-line mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl">{t("servicesTitle")}</h2>
           </FadeIn>
-          {(() => {
-            const serviceIcons: Record<string, React.ReactNode> = {
-              "bridal-hair": <Crown size={20} className="text-gold shrink-0" />,
-              "bridal-makeup": <Wand2 size={20} className="text-gold shrink-0" />,
-              "hair-styling": <Scissors size={20} className="text-gold shrink-0" />,
-              "makeup": <Sparkles size={20} className="text-gold shrink-0" />,
-              "editorial-styling": <Camera size={20} className="text-gold shrink-0" />,
-              "fashion-styling": <Star size={20} className="text-gold shrink-0" />,
-              "red-carpet": <Drama size={20} className="text-gold shrink-0" />,
-              "event-styling": <Gem size={20} className="text-gold shrink-0" />,
-              "hair-extensions": <Waves size={20} className="text-gold shrink-0" />,
-            };
-            return (
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredServices.map((service, i) => (
+            {featuredServices.map((service, i) => {
+              const Icon = getServiceIcon(service.slug, service.icon);
+              return (
               <FadeIn key={service.slug} delay={i * 0.08}>
                 <Link
                   href={`/services/${service.slug}`}
                   className="group block border border-border bg-background p-8 transition-all duration-300 hover:border-gold rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    {serviceIcons[service.slug] ?? <Sparkles size={20} className="text-gold shrink-0" />}
+                    <Icon size={20} className="text-gold shrink-0" />
                     <h3 className="text-2xl transition-colors group-hover:text-gold">
                       {service[loc].title}
                     </h3>
@@ -178,10 +167,9 @@ export default async function HomePage({
                   <p className="mt-3 text-sm text-muted">{service[loc].shortDesc}</p>
                 </Link>
               </FadeIn>
-            ))}
+              );
+            })}
           </div>
-            );
-          })()}
           <FadeIn className="mt-12 text-center">
             <Button asChild variant="outline">
               <Link href="/services">

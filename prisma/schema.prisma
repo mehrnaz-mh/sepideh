@@ -122,6 +122,7 @@ model Service {
   bufferMinutes   Int      @default(15)
   isActive        Boolean  @default(true)
   sortOrder       Int      @default(0)
+  icon            String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

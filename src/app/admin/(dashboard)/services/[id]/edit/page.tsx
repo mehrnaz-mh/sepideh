@@ -20,6 +20,7 @@ export default async function EditServicePage({
         durationMinutes: service.durationMinutes,
         bufferMinutes: service.bufferMinutes,
         isActive: service.isActive,
+        icon: service.icon,
         translations: service.translations,
       }}
     />

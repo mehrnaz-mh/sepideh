@@ -2,11 +2,15 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { services as fallbackServices } from "@/data/content";
 
-export type PublicService = (typeof fallbackServices)[number];
+export type PublicService = (typeof fallbackServices)[number] & {
+  // Admin-chosen icon key (see service-icons.tsx). Optional: static fallback
+  // entries don't have one, in which case the icon is derived from the slug.
+  icon?: string | null;
+};
 
 // `fallbackServices` is a readonly tuple; expose it as a plain array so it is
 // assignable to the PublicService[] return type.
-const fallbackList: PublicService[] = [...fallbackServices];
+const fallbackList: PublicService[] = fallbackServices.map((s) => ({ ...s }));
 
 /**
  * Reads services from the database and maps them into the same shape the
@@ -45,6 +49,7 @@ export async function getPublicServices(): Promise<PublicService[]> {
       durationMinutes: service.durationMinutes,
       bufferMinutes: service.bufferMinutes,
       sortOrder: service.sortOrder,
+      icon: service.icon,
       de: {
         title: de?.title ?? staticEntry?.de.title ?? service.slug,
         shortDesc: de?.shortDesc ?? staticEntry?.de.shortDesc ?? "",

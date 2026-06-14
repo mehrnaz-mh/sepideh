@@ -35,6 +35,7 @@ function parseServiceForm(formData: FormData) {
     bufferMinutes: formData.get("bufferMinutes"),
     isActive: parseFormBoolean(formData.get("isActive")),
     sortOrder: formData.get("sortOrder"),
+    icon: formData.get("icon") || undefined,
     titleDe: formData.get("titleDe"),
     titleEn: formData.get("titleEn"),
     descriptionDe: formData.get("descriptionDe"),

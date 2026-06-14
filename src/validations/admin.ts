@@ -19,6 +19,7 @@ export const serviceSchema = z.object({
   bufferMinutes: z.coerce.number().min(0).max(120),
   isActive: z.boolean().optional(),
   sortOrder: z.coerce.number().min(0).default(0),
+  icon: z.string().optional(),
   titleDe: z.string().min(1),
   titleEn: z.string().min(1),
   descriptionDe: z.string().min(1),

@@ -1,11 +1,17 @@
 "use client";
 
 import { AdminFormShell } from "@/components/admin/form-shell";
-import { CheckboxField, FormField, FormSection, TextAreaField } from "@/components/admin/forms/fields";
+import { CheckboxField, FormField, FormSection, SelectField, TextAreaField } from "@/components/admin/forms/fields";
 import { useAdminLang } from "@/components/admin/lang-context";
+import { SERVICE_ICON_LABELS } from "@/lib/service-icons";
 import { updateServiceAction } from "./edit-service-actions";
 
 type Trans = { locale: string; title?: string; shortDesc?: string | null; description?: string | null };
+
+const iconOptions = [
+  { value: "", label: "—" },
+  ...Object.entries(SERVICE_ICON_LABELS).map(([value, label]) => ({ value, label })),
+];
 
 export function EditServiceClient({
   id,
@@ -18,6 +24,7 @@ export function EditServiceClient({
     durationMinutes: number;
     bufferMinutes: number;
     isActive: boolean;
+    icon?: string | null;
     translations: Trans[];
   };
 }) {
@@ -34,6 +41,7 @@ export function EditServiceClient({
         <FormField label={t("sortOrder")} name="sortOrder" type="number" defaultValue={service.sortOrder} />
         <FormField label={t("durationMinutes")} name="durationMinutes" type="number" defaultValue={service.durationMinutes} required />
         <FormField label={t("bufferMinutes")} name="bufferMinutes" type="number" defaultValue={service.bufferMinutes} />
+        <SelectField label={t("icon")} name="icon" defaultValue={service.icon ?? ""} options={iconOptions} />
         <CheckboxField label={t("active")} name="isActive" defaultChecked={service.isActive} />
       </FormSection>
       <FormSection title={t("germanContent")}>

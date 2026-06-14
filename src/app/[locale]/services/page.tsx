@@ -84,8 +84,52 @@ export default async function ServicesPage({
   const t = await getTranslations("services");
   const tc = await getTranslations("common");
   const loc = locale as Locale;
-  const groups = serviceGroups[loc];
   const services = await getPublicServices();
+
+  const curatedGroups = serviceGroups[loc];
+  const knownSlugs = new Set(
+    curatedGroups.flatMap((g) => g.slugs as readonly string[]),
+  );
+  const extraServices = services.filter((s) => !knownSlugs.has(s.slug));
+
+  type ServiceGroup = {
+    title: string;
+    slugs: readonly string[];
+    featured: boolean;
+  };
+
+  // The group that contains the VIP block is always pushed to the very end,
+  // after the curated groups and any auto-collected new services.
+  const vipGroups: ServiceGroup[] = [];
+  const normalGroups: ServiceGroup[] = [];
+  for (const g of curatedGroups) {
+    const group: ServiceGroup = {
+      title: g.title,
+      slugs: g.slugs as readonly string[],
+      featured: g.featured,
+    };
+    if (group.slugs.includes("vip-services")) {
+      vipGroups.push(group);
+    } else {
+      normalGroups.push(group);
+    }
+  }
+
+  const groups: ServiceGroup[] = [
+    ...normalGroups,
+    // Any service whose slug isn't in a curated group (e.g. a brand-new one
+    // added in the dashboard) shows up here so it's never hidden.
+    ...(extraServices.length > 0
+      ? [
+          {
+            title: loc === "de" ? "Mehr Leistungen" : "More Services",
+            slugs: extraServices.map((s) => s.slug),
+            featured: false,
+          },
+        ]
+      : []),
+    ...vipGroups,
+  ];
 
   return (
     <>

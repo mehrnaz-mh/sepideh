@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FadeIn } from "@/components/motion/fade-in";
 import type { Locale } from "@/data/content";
 import type { PublicService } from "@/lib/services-data";
+import { getServiceIcon } from "@/lib/service-icons";
 import {
   createBooking,
   getAvailableDatesAction,
@@ -18,7 +19,7 @@ import {
 } from "@/actions/booking";
 import { format, addDays, parse, startOfDay } from "date-fns";
 import { de, enGB } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Sparkles, Star, Scissors, Wand2, Camera, Drama, Crown, CalendarHeart, Gem, MessageSquare, Waves } from "lucide-react";
+import { ChevronLeft, ChevronRight, Gem } from "lucide-react";
 import { siteConfig } from "@/data/content";
 
 export default function BookingPage({ services }: { services: PublicService[] }) {
@@ -42,19 +43,6 @@ export default function BookingPage({ services }: { services: PublicService[] })
 
   const selectedService = services.find((s) => s.slug === serviceSlug);
 
-  const serviceIcons: Record<string, React.ReactNode> = {
-    "bridal-hair": <Sparkles size={20} />,
-    "bridal-makeup": <Star size={20} />,
-    "hair-styling": <Scissors size={20} />,
-    "makeup": <Wand2 size={20} />,
-    "editorial-styling": <Camera size={20} />,
-    "fashion-styling": <Drama size={20} />,
-    "red-carpet": <Crown size={20} />,
-    "event-styling": <CalendarHeart size={20} />,
-    "hair-extensions": <Waves size={20} />,
-    "vip-services": <Gem size={20} />,
-    "consultation": <MessageSquare size={20} />,
-  };
   const dateLocale = locale === "de" ? de : enGB;
 
   const [calendarMonth, setCalendarMonth] = useState(() => {
@@ -158,7 +146,9 @@ export default function BookingPage({ services }: { services: PublicService[] })
               <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-5">
                 {services
                   .filter((s) => s.slug !== "vip-services")
-                  .map((service) => (
+                  .map((service) => {
+                    const Icon = getServiceIcon(service.slug, service.icon);
+                    return (
                     <button
                       key={service.slug}
                       type="button"
@@ -170,13 +160,14 @@ export default function BookingPage({ services }: { services: PublicService[] })
                       }`}
                     >
                       <span className={`shrink-0 ${serviceSlug === service.slug ? "text-gold" : "text-muted"}`}>
-                        {serviceIcons[service.slug]}
+                        <Icon size={20} />
                       </span>
                       <p className={`text-xs leading-tight sm:text-base sm:leading-snug ${serviceSlug === service.slug ? "text-gold" : "text-foreground"}`}>
                         {service[locale].title}
                       </p>
                     </button>
-                  ))}
+                    );
+                  })}
 
                 {/* VIP — inside grid, spans 2 cols */}
                 <div className="col-span-2 border border-border bg-background-secondary px-4 py-8 flex flex-col items-center justify-center gap-1 text-center">
