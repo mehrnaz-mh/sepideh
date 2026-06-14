@@ -1,23 +1,10 @@
-import React from "react";
 import { Link } from "@/i18n/routing";
 import type { Locale } from "@/data/content";
-import { ArrowRight, Crown, Wand2, Scissors, Sparkles, Camera, Star, Drama, Waves, Gem, MessageSquare } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { getServiceIcon } from "@/lib/service-icons";
+import type { PublicService } from "@/lib/services-data";
 
-const serviceIcons: Record<string, React.ReactNode> = {
-  "bridal-hair": <Crown size={24} className="text-gold" />,
-  "bridal-makeup": <Wand2 size={24} className="text-gold" />,
-  "hair-styling": <Scissors size={24} className="text-gold" />,
-  "makeup": <Sparkles size={24} className="text-gold" />,
-  "editorial-styling": <Camera size={24} className="text-gold" />,
-  "fashion-styling": <Star size={24} className="text-gold" />,
-  "red-carpet": <Drama size={24} className="text-gold" />,
-  "event-styling": <Gem size={24} className="text-gold" />,
-  "hair-extensions": <Waves size={24} className="text-gold" />,
-  "vip-services": <Gem size={24} className="text-gold" />,
-  "consultation": <MessageSquare size={24} className="text-gold" />,
-};
-
-type ServiceItem = (typeof import("@/data/content").services)[number];
+type ServiceItem = PublicService;
 
 export function ServiceListItem({
   service,
@@ -35,6 +22,7 @@ export function ServiceListItem({
   minutesLabel: string;
 }) {
   const number = String(index + 1).padStart(2, "0");
+  const Icon = getServiceIcon(service.slug, service.icon);
 
   return (
     <article
@@ -56,7 +44,7 @@ export function ServiceListItem({
                 href={`/services/${service.slug}`}
                 className="inline-flex items-center gap-3 transition-colors hover:text-gold"
               >
-                {serviceIcons[service.slug] ?? <Sparkles size={24} className="text-gold shrink-0" />}
+                <Icon size={24} className="text-gold shrink-0" />
                 {service[locale].title}
               </Link>
             </h2>
