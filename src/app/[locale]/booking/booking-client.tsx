@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FadeIn } from "@/components/motion/fade-in";
-import { services } from "@/data/content";
 import type { Locale } from "@/data/content";
+import type { PublicService } from "@/lib/services-data";
 import {
   createBooking,
   getAvailableDatesAction,
@@ -21,7 +21,7 @@ import { de, enGB } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Sparkles, Star, Scissors, Wand2, Camera, Drama, Crown, CalendarHeart, Gem, MessageSquare, Waves } from "lucide-react";
 import { siteConfig } from "@/data/content";
 
-export default function BookingPage() {
+export default function BookingPage({ services }: { services: PublicService[] }) {
   const t = useTranslations("booking");
   const tc = useTranslations("common");
   const locale = useLocale() as Locale;

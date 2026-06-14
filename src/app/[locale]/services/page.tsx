@@ -3,8 +3,12 @@ import { Link } from "@/i18n/routing";
 import { FadeIn } from "@/components/motion/fade-in";
 import { ServiceListItem } from "@/components/services/service-list-item";
 import { Button } from "@/components/ui/button";
-import { faqItems, services, siteConfig } from "@/data/content";
+import { faqItems, siteConfig } from "@/data/content";
 import type { Locale } from "@/data/content";
+import { getPublicServices } from "@/lib/services-data";
+
+// Read fresh from the DB on every request so admin edits show up immediately.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -81,6 +85,7 @@ export default async function ServicesPage({
   const tc = await getTranslations("common");
   const loc = locale as Locale;
   const groups = serviceGroups[loc];
+  const services = await getPublicServices();
 
   return (
     <>

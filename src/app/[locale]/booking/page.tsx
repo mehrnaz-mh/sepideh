@@ -3,7 +3,11 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { MapPin, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import { BookingClient } from "./booking-dynamic";
+import { getPublicServices } from "@/lib/services-data";
 import type { Metadata } from "next";
+
+// Read fresh from the DB on every request so admin edits show up immediately.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -44,6 +48,7 @@ export default async function BookingPageWrapper({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("booking");
+  const services = await getPublicServices();
 
   return (
     <>
@@ -82,7 +87,7 @@ export default async function BookingPageWrapper({
             </div>
           </div>
 
-          <BookingClient />
+          <BookingClient services={services} />
         </div>
       </section>
     </>

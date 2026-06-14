@@ -4,12 +4,17 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/motion/fade-in";
-import { faqItems, services } from "@/data/content";
+import { faqItems, services as staticServices } from "@/data/content";
+import { getPublicServices } from "@/lib/services-data";
 import { getPublicPortfolioItems } from "@/lib/portfolio-public";
 import type { Locale } from "@/data/content";
 
+// Read fresh from the DB on every request so admin edits show up immediately.
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
-  return services.flatMap((service) =>
+  // Slugs are stable, so the static list is sufficient for prerender hints.
+  return staticServices.flatMap((service) =>
     ["de", "en"].map((locale) => ({ locale, slug: service.slug })),
   );
 }
@@ -20,6 +25,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const services = await getPublicServices();
   const service = services.find((s) => s.slug === slug);
   if (!service) return {};
   const loc = locale as Locale;
@@ -36,6 +42,7 @@ export default async function ServiceDetailPage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+  const services = await getPublicServices();
   const service = services.find((s) => s.slug === slug);
   if (!service) notFound();
 

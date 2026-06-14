@@ -15,13 +15,16 @@ import {
 import {
   aboutBio,
   faqItems,
-  services,
   siteConfig,
   siteImages,
   testimonials,
 } from "@/data/content";
 import { getPublicPortfolioItems } from "@/lib/portfolio-public";
+import { getPublicServices } from "@/lib/services-data";
 import type { Locale } from "@/data/content";
+
+// Read fresh from the DB on every request so admin edits show up immediately.
+export const dynamic = "force-dynamic";
 import { ArrowRight, Quote } from "lucide-react";
 
 export default async function HomePage({
@@ -37,6 +40,7 @@ export default async function HomePage({
 
   const portfolioItems = await getPublicPortfolioItems();
   const featuredPortfolio = portfolioItems.filter((p) => p.featured).slice(0, 6);
+  const services = await getPublicServices();
   const featuredServices = services.slice(0, 6);
 
   const faqData = faqItems.map((item) => ({
