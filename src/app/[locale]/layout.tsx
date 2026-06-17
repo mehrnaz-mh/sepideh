@@ -26,8 +26,8 @@ export async function generateMetadata({
   return {
     title: {
       default: isDe
-        ? "Sepideh Mihanparast — Luxury Hair & Makeup Hamburg"
-        : "Sepideh Mihanparast — Luxury Hair & Makeup Hamburg",
+        ? "Sepideh Mihanparast — Braut, Hair & Makeup | Hamburg"
+        : "Sepideh Mihanparast — Bridal, Hair & Makeup | Hamburg",
       template: "%s | Sepideh Mihanparast",
     },
     description: isDe
@@ -50,7 +50,9 @@ export async function generateMetadata({
           url: `${siteUrl}/og-image.jpg`,
           width: 1200,
           height: 630,
-          alt: "Sepideh Mihanparast — Luxury Hair & Makeup Hamburg",
+          alt: isDe
+            ? "Sepideh Mihanparast — Braut, Hair & Makeup | Hamburg"
+            : "Sepideh Mihanparast — Bridal, Hair & Makeup | Hamburg",
         },
       ],
     },

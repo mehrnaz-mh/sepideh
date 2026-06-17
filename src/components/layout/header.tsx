@@ -48,7 +48,7 @@ export function Header() {
             className="h-10 w-auto object-contain"
           />
           <div className="flex flex-col">
-            <span className="text-xl tracking-wide text-muted md:text-2xl">
+            <span className="text-xl tracking-wide text-muted transition-colors group-hover:text-gold md:text-2xl">
               {siteConfig.name.split(" ")[0]}
             </span>
             <span className="text-[10px] uppercase tracking-[0.3em] text-muted transition-colors group-hover:text-gold">

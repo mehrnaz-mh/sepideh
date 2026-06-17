@@ -32,7 +32,7 @@ export async function GET(
     description: appointment.notes || title,
     startTime: appointment.startTime,
     endTime: appointment.endTime,
-    uid: `appointment-${appointment.id}@sepidehmihanparast.de`,
+    uid: `appointment-${appointment.id}@sepidehbeauty.com`,
   });
 
   return new Response(ics, {

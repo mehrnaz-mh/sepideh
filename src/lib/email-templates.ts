@@ -19,7 +19,7 @@ const colors = {
 const radius = "6px";
 
 function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL || "https://sepidehmihanparast.de").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://www.sepidehbeauty.com").replace(/\/$/, "");
 }
 
 function escapeHtml(value: string) {

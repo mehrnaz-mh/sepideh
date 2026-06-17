@@ -48,7 +48,7 @@ export async function sendEmail({
     process.env.RESEND_FROM_EMAIL ||
     (process.env.NODE_ENV === "development"
       ? "onboarding@resend.dev"
-      : "bookings@sepidehmihanparast.de");
+      : "info@sepidehbeauty.com");
 
   const { data, error } = await resend.emails.send({
     from: `${siteName()} <${from}>`,
