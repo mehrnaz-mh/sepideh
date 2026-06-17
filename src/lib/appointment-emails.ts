@@ -28,7 +28,7 @@ function adminEmail() {
   return (
     process.env.ADMIN_NOTIFICATION_EMAIL?.trim() ||
     process.env.ADMIN_EMAIL?.trim() ||
-    "se.mihanparast@yahoo.de"
+    "se.mihanparast@yahoo.com"
   );
 }
 

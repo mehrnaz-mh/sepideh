@@ -137,7 +137,7 @@ export function renderAppointmentEmail({
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:${colors.card};border:1px solid ${colors.border};border-radius:${radius};">
           <tr>
             <td style="padding:40px 40px 28px;text-align:center;border-bottom:1px solid ${colors.border};border-radius:${radius} ${radius} 0 0;">
-              <div style="width:48px;height:1px;background-color:${colors.gold};margin:0 auto 20px;"></div>
+              <img src="${siteUrl()}/sepide/logo.png" alt="${escapeHtml(siteConfig.name)}" width="56" height="56" style="display:block;margin:0 auto 16px;width:56px;height:auto;" />
               <p style="margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:400;letter-spacing:-0.02em;color:${colors.foreground};line-height:1.2;">
                 ${escapeHtml(siteConfig.name)}
               </p>
