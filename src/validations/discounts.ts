@@ -36,8 +36,6 @@ export const discountOfferSchema = z.object({
   url: discountUrlSchema,
   offerDe: z.string().trim().min(1, "discountOfferRequired").max(160, "discountTextTooLong"),
   offerEn: z.string().trim().min(1, "discountOfferRequired").max(160, "discountTextTooLong"),
-  descriptionDe: z.string().trim().max(3000, "discountTextTooLong"),
-  descriptionEn: z.string().trim().max(3000, "discountTextTooLong"),
   expiresAt: expirySchema,
   isActive: z.boolean(),
   sortOrder: z.coerce.number().int("discountInvalidOrder").min(0, "discountInvalidOrder").max(100000, "discountInvalidOrder"),

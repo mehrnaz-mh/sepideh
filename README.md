@@ -81,7 +81,7 @@ Add Vercel Cron to hit `/api/cron/reminders` daily with `Authorization: Bearer C
 ## Brand Discount Codes
 
 - Manage offers at `/admin/discounts`; public pages are `/de/discounts` and `/en/discounts`.
-- Add the brand name, optional uploaded logo, discount badge, exact discount code, complete shop/referral URL, German and English offer headlines, and optional conditions and expiry date. Enable “Show this offer on the website” to publish it.
+- Add the brand name, optional uploaded logo, discount badge, exact discount code, complete shop/referral URL, German and English offer headlines, and an optional expiry date. The page-wide description is managed in the translations and is shared by every offer. Enable “Show this offer on the website” to publish it.
 - Visitors can copy the code and open the brand shop in a new tab. Referral parameters are preserved. Attribution and purchase reporting depend on the brand's referral system.
 - Store-link clicks pass through an internal redirect and are counted per offer in the admin panel. These are click totals, not verified purchases.
 - Disabled offers are hidden. Expiry dates include the entire day in `Europe/Berlin`.

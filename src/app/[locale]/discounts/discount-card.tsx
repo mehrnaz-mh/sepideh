@@ -99,9 +99,10 @@ export function DiscountCard({ offer }: { offer: PublicOffer }) {
             {copyState === "copied" ? <Check size={16} /> : <Copy size={16} />}
             {copyState === "copied" ? t("copied") : t("copy")}
           </Button>
-          <Button asChild variant="gold" className="w-full">
+          <Button asChild variant="gold" className="relative w-full px-10 text-center">
             <a href={`/api/discounts/${offer.id}/visit`} target="_blank" rel="sponsored nofollow noopener" aria-label={t("shopAt", { brand: offer.brandName })}>
-              {t("visit")}<ExternalLink size={16} />
+              <span>{t("visit")}</span>
+              <ExternalLink size={16} className="absolute right-4" />
             </a>
           </Button>
         </div>

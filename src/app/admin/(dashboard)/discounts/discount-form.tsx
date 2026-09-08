@@ -2,7 +2,7 @@
 
 import { useActionState, useState, type ChangeEvent } from "react";
 import { AdminFormShell } from "@/components/admin/form-shell";
-import { CheckboxField, FormField, FormSection, TextAreaField } from "@/components/admin/forms/fields";
+import { CheckboxField, FormField, FormSection } from "@/components/admin/forms/fields";
 import { useAdminLang } from "@/components/admin/lang-context";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 import { saveDiscountOffer } from "@/actions/discounts";
@@ -21,8 +21,6 @@ export function DiscountForm({ offer }: { offer?: DiscountFormValues }) {
     sortOrder: String(offer?.sortOrder ?? 0),
     offerDe: offer?.offerDe ?? "",
     offerEn: offer?.offerEn ?? "",
-    descriptionDe: offer?.descriptionDe ?? "",
-    descriptionEn: offer?.descriptionEn ?? "",
   });
   const [isActive, setIsActive] = useState(offer?.isActive ?? false);
   function field(name: keyof typeof values) {
@@ -69,13 +67,11 @@ export function DiscountForm({ offer }: { offer?: DiscountFormValues }) {
       <FormSection title={t("german")}>
         <div className="md:col-span-2" dir="ltr">
           <FormField label={t("discountOfferDe")} {...field("offerDe")} required placeholder="15 % Rabatt" />
-          <div className="mt-4"><TextAreaField label={t("descriptionDe")} {...field("descriptionDe")} /></div>
         </div>
       </FormSection>
       <FormSection title={t("english")}>
         <div className="md:col-span-2" dir="ltr">
           <FormField label={t("discountOfferEn")} {...field("offerEn")} required placeholder="15% off" />
-          <div className="mt-4"><TextAreaField label={t("descriptionEn")} {...field("descriptionEn")} /></div>
         </div>
       </FormSection>
       <p className="text-sm text-muted">{t("discountTermsHint")}</p>

@@ -11,8 +11,6 @@ const validOffer = {
   url: "https://brand.example/shop?ref=sepideh&campaign=beauty%20offers#products",
   offerDe: "15 % Rabatt",
   offerEn: "15% off",
-  descriptionDe: "",
-  descriptionEn: "",
   expiresAt: "",
   isActive: true,
   sortOrder: "0",

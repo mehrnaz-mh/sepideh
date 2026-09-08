@@ -32,12 +32,12 @@ export async function saveDiscountOffer(
     const message = parsed.error.issues[0]?.message;
     return { error: message?.startsWith("discount") ? message : "discountInvalidData" };
   }
-  const { expiresAt, descriptionDe, descriptionEn, ...fields } = parsed.data;
+  const { expiresAt, ...fields } = parsed.data;
   const data = {
     ...fields,
     expiresAt: expiresAt ? parseCalendarDate(expiresAt) : null,
-    descriptionDe: descriptionDe || null,
-    descriptionEn: descriptionEn || null,
+    descriptionDe: null,
+    descriptionEn: null,
   };
 
   try {

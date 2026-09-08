@@ -27,8 +27,6 @@ export type DiscountFormValues = {
   url: string;
   offerDe: string;
   offerEn: string;
-  descriptionDe: string | null;
-  descriptionEn: string | null;
   expiresAt: string | null;
   isActive: boolean;
   sortOrder: number;
