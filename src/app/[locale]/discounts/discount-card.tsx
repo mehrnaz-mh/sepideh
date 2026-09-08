@@ -94,7 +94,7 @@ export function DiscountCard({ offer }: { offer: PublicOffer }) {
           <p className="mb-2 text-xs text-muted">{t("codeLabel")}</p>
           <code ref={codeRef} dir="ltr" className="block select-all break-all font-mono text-lg tracking-wider">{offer.code}</code>
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+        <div className="mt-4 grid gap-3">
           <Button type="button" variant="outline" className="w-full" disabled={copying} onClick={copyCode} aria-label={t("copyFor", { brand: offer.brandName })}>
             {copyState === "copied" ? <Check size={16} /> : <Copy size={16} />}
             {copyState === "copied" ? t("copied") : t("copy")}
