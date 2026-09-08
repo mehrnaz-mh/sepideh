@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="96" viewBox="0 0 240 96" role="img" aria-labelledby="title">
+  <title id="title">Noura Cosmetics</title>
+  <rect x="12" y="20" width="56" height="56" rx="28" fill="none" stroke="#969E86" stroke-width="2"/>
+  <path d="M25 63V33l30 30V33" fill="none" stroke="#2F3428" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="82" y="44" fill="#2F3428" font-family="Georgia, serif" font-size="25" letter-spacing="3">NOURA</text>
+  <text x="83" y="64" fill="#969E86" font-family="Arial, sans-serif" font-size="9" letter-spacing="3">COSMETICS</text>
+</svg>

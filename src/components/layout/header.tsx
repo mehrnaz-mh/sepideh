@@ -16,6 +16,7 @@ const navItems = [
   { href: "/services", key: "services" },
   { href: "/portfolio", key: "portfolio" },
   { href: "/blog", key: "blog" },
+  { href: "/discounts", key: "discounts" },
   { href: "/contact", key: "contact" },
 ] as const;
 
@@ -57,7 +58,7 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-4 xl:gap-8 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.key}

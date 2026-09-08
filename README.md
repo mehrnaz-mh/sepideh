@@ -51,6 +51,21 @@ Default admin credentials (from seed):
 - Email: `admin@sepidehmihanparast.de`
 - Password: `Sepide2025!` (or value of `ADMIN_PASSWORD` in `.env`)
 
+## Local testing with PostgreSQL
+
+With Docker Desktop running:
+
+```bash
+npm run local:setup
+npm run dev:local
+```
+
+The setup creates a separate PostgreSQL database on `127.0.0.1:5433`, writes ignored development settings to `.env.development.local`, applies the schema and seeds the existing site content. It refuses to push or seed any database outside this local target. Re-running setup also resets the local admin to the credentials in that file.
+
+Open `http://localhost:3000/admin/login` and use the local `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env.development.local`. Manage test offers at `/admin/discounts` and view them at `/de/discounts` or `/en/discounts`.
+
+`npm run local:stop` stops only this project's database and keeps its data. Run `npm run local:setup` to start it again. The generated environment file applies only to development; the existing `.env` remains in place.
+
 ## Deployment (Vercel)
 
 1. Push to GitHub and import in Vercel
@@ -62,6 +77,32 @@ Default admin credentials (from seed):
 ### Cron (Reminder Emails)
 
 Add Vercel Cron to hit `/api/cron/reminders` daily with `Authorization: Bearer CRON_SECRET`.
+
+## Brand Discount Codes
+
+- Manage offers at `/admin/discounts`; public pages are `/de/discounts` and `/en/discounts`.
+- Add the brand name, optional uploaded logo, discount badge, exact discount code, complete shop/referral URL, German and English offer headlines, and optional conditions and expiry date. Enable “Show this offer on the website” to publish it.
+- Visitors can copy the code and open the brand shop in a new tab. Referral parameters are preserved. Attribution and purchase reporting depend on the brand's referral system.
+- Store-link clicks pass through an internal redirect and are counted per offer in the admin panel. These are click totals, not verified purchases.
+- Disabled offers are hidden. Expiry dates include the entire day in `Europe/Berlin`.
+- Admins and editors can create, edit and delete offers. Offers are not seeded with example promotions.
+
+For an existing database, apply only the additive discount table update before deploying:
+
+```bash
+npx prisma db execute --file prisma/updates/20260907_discount_offers.sql --schema prisma/schema.prisma
+npm run db:generate
+```
+
+For a new database, the regular `npm run db:push` setup includes this table.
+
+Run the discount validation and expiry checks with:
+
+```bash
+node --import tsx --test src/lib/discounts.test.ts
+```
+
+To recreate the six fictional local preview cards, run `npm run local:discounts-demo`. This command refuses to write outside the isolated local database.
 
 ## Portfolio Content
 

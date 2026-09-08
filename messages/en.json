@@ -5,6 +5,7 @@
     "services": "Services",
     "portfolio": "Portfolio",
     "blog": "Blog",
+    "discounts": "Discounts",
     "booking": "Book Appointment",
     "contact": "Contact"
   },
@@ -111,6 +112,26 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Beauty, Bridal & Editorial Insights"
+  },
+  "discounts": {
+    "eyebrow": "From Sepideh, for you",
+    "title": "Beauty offers & discount codes",
+    "subtitle": "Discover offers from my partner brands. Copy your code, visit the brand’s shop and enter it at checkout.",
+    "codeLabel": "Your discount code",
+    "copy": "Copy code",
+    "copyFor": "Copy the discount code for {brand}",
+    "copied": "Code copied",
+    "copiedHint": "Your code is ready. Paste it at checkout in the brand’s shop.",
+    "copyFailed": "Automatic copying is unavailable. Select the code above and copy it manually.",
+    "visit": "Visit brand shop",
+    "shopAt": "Visit {brand}’s shop (opens in a new tab)",
+    "checkoutHint": "The shop opens in a new tab. Enter the code at checkout.",
+    "validUntil": "Valid through {date}",
+    "emptyTitle": "New offers are on their way",
+    "emptyDescription": "There are no active discount codes right now. Check back for offers from my partner brands.",
+    "unavailable": "Offers are temporarily unavailable",
+    "unavailableHint": "Please try loading the offers again in a moment.",
+    "retry": "Try again"
   },
   "legal": {
     "impressum": "Legal Notice",

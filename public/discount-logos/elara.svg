@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="96" viewBox="0 0 240 96" role="img" aria-labelledby="title">
+  <title id="title">Elara Beauty</title>
+  <path d="M17 48c13-24 33-24 46 0-13 24-33 24-46 0Z" fill="none" stroke="#969E86" stroke-width="2"/>
+  <path d="M40 28c-11 11-11 29 0 40 11-11 11-29 0-40Z" fill="#969E86" opacity=".35"/>
+  <text x="82" y="48" fill="#2F3428" font-family="Georgia, serif" font-size="27" letter-spacing="4">ELARA</text>
+  <text x="84" y="67" fill="#969E86" font-family="Arial, sans-serif" font-size="9" letter-spacing="4">BEAUTY</text>
+</svg>

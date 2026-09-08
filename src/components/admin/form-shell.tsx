@@ -16,7 +16,7 @@ export function AdminFormShell({
   titleKey?: string;
   title?: string;
   backHref: string;
-  action: (formData: FormData) => Promise<void>;
+  action: (formData: FormData) => void | Promise<void>;
   children: React.ReactNode;
   submitLabel?: string;
 }) {

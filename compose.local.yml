@@ -1,0 +1,21 @@
+name: sepideh-local
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sepideh
+      POSTGRES_PASSWORD: ${LOCAL_POSTGRES_PASSWORD:?Set LOCAL_POSTGRES_PASSWORD in .env.development.local}
+      POSTGRES_DB: sepideh_local
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sepideh -d sepideh_local"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgres_data:

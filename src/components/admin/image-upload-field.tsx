@@ -24,6 +24,10 @@ export function ImageUploadField({
   required,
   className,
   includeMetadata = false,
+  allowRemove = false,
+  chooseLabel = "Choose image",
+  replaceLabel = "Replace image",
+  removeLabel = "Remove image",
 }: {
   name: string;
   label: string;
@@ -33,6 +37,10 @@ export function ImageUploadField({
   className?: string;
   /** When true, adds hidden fields for media library metadata (publicId, cloudinaryId, etc.) */
   includeMetadata?: boolean;
+  allowRemove?: boolean;
+  chooseLabel?: string;
+  replaceLabel?: string;
+  removeLabel?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const blobRef = useRef<string | null>(null);
@@ -103,6 +111,19 @@ export function ImageUploadField({
     xhr.send(formData);
   }
 
+  function removeImage() {
+    if (blobRef.current) {
+      URL.revokeObjectURL(blobRef.current);
+      blobRef.current = null;
+    }
+    if (inputRef.current) inputRef.current.value = "";
+    setUrl("");
+    setPreview("");
+    setMetadata(null);
+    setError("");
+    setProgress(0);
+  }
+
   return (
     <div className={cn("space-y-3", className)}>
       <Label htmlFor={`${name}-file`}>{label}</Label>
@@ -124,12 +145,35 @@ export function ImageUploadField({
           id={`${name}-file`}
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
-          className="text-sm file:mr-3 file:border file:border-border file:bg-background file:px-3 file:py-2 file:text-xs file:uppercase file:tracking-widest"
+          className={allowRemove ? "sr-only" : "text-sm file:mr-3 file:border file:border-border file:bg-background file:px-3 file:py-2 file:text-xs file:uppercase file:tracking-widest"}
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) uploadFile(file);
           }}
         />
+        {allowRemove && (
+          <>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              className="border border-foreground px-4 py-2 text-xs uppercase tracking-wider transition-colors hover:bg-foreground hover:text-background disabled:opacity-50"
+            >
+              {preview ? replaceLabel : chooseLabel}
+            </button>
+            {preview && (
+              <button
+                type="button"
+                data-image-action="remove"
+                onClick={removeImage}
+                disabled={uploading}
+                className="px-2 py-2 text-xs uppercase tracking-wider text-red-700 transition-colors hover:text-red-900 disabled:opacity-50"
+              >
+                {removeLabel}
+              </button>
+            )}
+          </>
+        )}
         {uploading && (
           <span className="text-xs text-muted">Uploading… {progress}%</span>
         )}

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ChangeEventHandler } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +10,8 @@ export function FormField({
   name,
   type = "text",
   defaultValue,
+  value,
+  onChange,
   required,
   placeholder,
   step,
@@ -20,6 +23,8 @@ export function FormField({
   name: string;
   type?: string;
   defaultValue?: string | number;
+  value?: string | number;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   required?: boolean;
   placeholder?: string;
   step?: string;
@@ -28,19 +33,25 @@ export function FormField({
   hint?: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <Label htmlFor={name}>{label}</Label>
       <Input
         id={name}
         name={name}
         type={type}
         defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
         required={required}
         placeholder={placeholder}
         step={step}
         min={min}
         max={max}
-        className="mt-2"
+        className={
+          type === "date" || type === "time" || type === "datetime-local"
+            ? "mt-2 block min-w-0 max-w-full"
+            : "mt-2 min-w-0 max-w-full"
+        }
         dir={type === "date" || type === "time" || type === "datetime-local" ? "ltr" : undefined}
       />
       {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
@@ -52,22 +63,28 @@ export function TextAreaField({
   label,
   name,
   defaultValue,
+  value,
+  onChange,
   required,
   rows = 4,
 }: {
   label: string;
   name: string;
   defaultValue?: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
   required?: boolean;
   rows?: number;
 }) {
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <Label htmlFor={name}>{label}</Label>
       <Textarea
         id={name}
         name={name}
         defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
         required={required}
         rows={rows}
         className="mt-2"
@@ -80,10 +97,14 @@ export function CheckboxField({
   label,
   name,
   defaultChecked,
+  checked,
+  onChange,
 }: {
   label: string;
   name: string;
   defaultChecked?: boolean;
+  checked?: boolean;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
     <label className="flex items-center gap-2 text-sm">
@@ -91,6 +112,8 @@ export function CheckboxField({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
+        checked={checked}
+        onChange={onChange}
         className="h-4 w-4 accent-gold"
       />
       {label}
@@ -135,7 +158,7 @@ export function FormSection({ title, children }: { title: string; children: Reac
   return (
     <div className="border border-border bg-background p-6">
       <h3 className="mb-4 text-lg">{title}</h3>
-      <div className="grid gap-4 md:grid-cols-2">{children}</div>
+      <div className="grid min-w-0 gap-4 md:grid-cols-2">{children}</div>
     </div>
   );
 }

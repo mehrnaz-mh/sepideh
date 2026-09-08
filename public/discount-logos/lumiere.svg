@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="96" viewBox="0 0 240 96" role="img" aria-labelledby="title">
+  <title id="title">Lumière Hair</title>
+  <circle cx="39" cy="48" r="23" fill="#969E86" opacity=".15"/>
+  <path d="M39 16v12M39 68v12M7 48h12M59 48h12M16 25l9 9M53 62l9 9M62 25l-9 9M25 62l-9 9" stroke="#969E86" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="39" cy="48" r="12" fill="#969E86"/>
+  <text x="82" y="45" fill="#2F3428" font-family="Georgia, serif" font-size="21" letter-spacing="1">LUMIÈRE</text>
+  <text x="84" y="65" fill="#969E86" font-family="Arial, sans-serif" font-size="10" letter-spacing="5">HAIR</text>
+</svg>

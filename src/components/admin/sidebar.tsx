@@ -14,6 +14,7 @@ import {
   Images,
   Search,
   BookOpen,
+  TicketPercent,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminLang } from "@/components/admin/lang-context";
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/admin/portfolio", labelKey: "portfolio", icon: Image },
   { href: "/admin/testimonials", labelKey: "testimonials", icon: Star },
   { href: "/admin/blog", labelKey: "blog", icon: FileText },
+  { href: "/admin/discounts", labelKey: "discounts", icon: TicketPercent },
   { href: "/admin/media", labelKey: "mediaLibrary", icon: Images },
   { href: "/admin/seo", labelKey: "seo", icon: Search },
   { href: "/admin/settings", labelKey: "settings", icon: Settings },
@@ -83,4 +85,3 @@ export function AdminSidebar({ pendingCount = 0 }: { pendingCount?: number }) {
     </aside>
   );
 }
-

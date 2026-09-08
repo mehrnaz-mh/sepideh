@@ -5,6 +5,7 @@
     "services": "Leistungen",
     "portfolio": "Portfolio",
     "blog": "Blog",
+    "discounts": "Rabattcodes",
     "booking": "Termin buchen",
     "contact": "Kontakt"
   },
@@ -111,6 +112,26 @@
   "blog": {
     "title": "Blog",
     "subtitle": "Beauty, Bridal & Editorial Insights"
+  },
+  "discounts": {
+    "eyebrow": "Von Sepideh, für dich",
+    "title": "Beauty-Angebote & Rabattcodes",
+    "subtitle": "Entdecke Angebote meiner Partnermarken. Kopiere deinen Code, besuche den Shop der Marke und löse ihn an der Kasse ein.",
+    "codeLabel": "Dein Rabattcode",
+    "copy": "Code kopieren",
+    "copyFor": "Rabattcode für {brand} kopieren",
+    "copied": "Code kopiert",
+    "copiedHint": "Dein Code ist bereit. Füge ihn an der Kasse im Shop der Marke ein.",
+    "copyFailed": "Automatisches Kopieren ist nicht möglich. Markiere den Code oben und kopiere ihn manuell.",
+    "visit": "Zum Shop der Marke",
+    "shopAt": "Shop von {brand} besuchen (öffnet in einem neuen Tab)",
+    "checkoutHint": "Der Shop öffnet in einem neuen Tab. Gib den Code an der Kasse ein.",
+    "validUntil": "Gültig bis einschließlich {date}",
+    "emptyTitle": "Neue Angebote sind unterwegs",
+    "emptyDescription": "Aktuell gibt es keine aktiven Rabattcodes. Schau bald wieder vorbei und entdecke Angebote meiner Partnermarken.",
+    "unavailable": "Angebote sind vorübergehend nicht verfügbar",
+    "unavailableHint": "Bitte versuche es gleich noch einmal.",
+    "retry": "Erneut versuchen"
   },
   "legal": {
     "impressum": "Impressum",

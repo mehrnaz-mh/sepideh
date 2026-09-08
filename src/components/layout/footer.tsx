@@ -89,6 +89,7 @@ export function Footer() {
               <li><Link href="/about" className="hover:text-gold">{nav("about")}</Link></li>
               <li><Link href="/services" className="hover:text-gold">{nav("services")}</Link></li>
               <li><Link href="/portfolio" className="hover:text-gold">{nav("portfolio")}</Link></li>
+              <li><Link href="/discounts" className="hover:text-gold">{nav("discounts")}</Link></li>
               <li><Link href="/booking" className="hover:text-gold">{nav("booking")}</Link></li>
               <li><Link href="/contact" className="hover:text-gold">{nav("contact")}</Link></li>
             </ul>

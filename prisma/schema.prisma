@@ -377,6 +377,27 @@ model Setting {
   value Json
 }
 
+model DiscountOffer {
+  id            String    @id @default(cuid())
+  brandName     String
+  logoUrl       String?   @db.Text
+  discountLabel String?
+  code          String
+  url           String    @db.Text
+  offerDe       String
+  offerEn       String
+  descriptionDe String?   @db.Text
+  descriptionEn String?   @db.Text
+  expiresAt     DateTime? @db.Date
+  isActive      Boolean   @default(false)
+  sortOrder     Int       @default(0)
+  clickCount    Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([isActive, expiresAt, sortOrder])
+}
+
 model Translation {
   id        String @id @default(cuid())
   namespace String

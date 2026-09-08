@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "node scripts/local.mjs dev",
+    "local:setup": "node scripts/local.mjs setup",
+    "local:discounts-demo": "node scripts/seed-local-discounts.mjs",
+    "local:stop": "node scripts/local.mjs stop",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
