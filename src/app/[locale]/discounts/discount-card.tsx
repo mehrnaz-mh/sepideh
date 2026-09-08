@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Check, Copy, ExternalLink } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -99,10 +99,9 @@ export function DiscountCard({ offer }: { offer: PublicOffer }) {
             {copyState === "copied" ? <Check size={16} /> : <Copy size={16} />}
             {copyState === "copied" ? t("copied") : t("copy")}
           </Button>
-          <Button asChild variant="gold" className="relative w-full px-10 text-center">
+          <Button asChild variant="gold" className="w-full text-center">
             <a href={`/api/discounts/${offer.id}/visit`} target="_blank" rel="sponsored nofollow noopener" aria-label={t("shopAt", { brand: offer.brandName })}>
               <span>{t("visit")}</span>
-              <ExternalLink size={16} className="absolute right-4" />
             </a>
           </Button>
         </div>
